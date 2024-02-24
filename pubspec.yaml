@@ -9,7 +9,14 @@ dependencies:
   flutter:
     sdk: flutter
 
+  flutter_bloc:
+  bloc:
+  rxdart:
+  equatable:
+  youtube_explode_dart: ^2.1.0
   cupertino_icons: ^1.0.6
+  just_audio:
+  just_audio_mpv:
 
 dev_dependencies:
   flutter_test:
