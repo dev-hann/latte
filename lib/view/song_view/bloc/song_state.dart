@@ -17,6 +17,18 @@ class SongState extends Equatable {
     return playerState.playing;
   }
 
+  bool get isLoading {
+    switch (playerState.processingState) {
+      case ProcessingState.idle:
+      case ProcessingState.loading:
+      case ProcessingState.buffering:
+        return true;
+      case ProcessingState.ready:
+      case ProcessingState.completed:
+        return false;
+    }
+  }
+
   @override
   List<Object?> get props => [
         currentsong,
