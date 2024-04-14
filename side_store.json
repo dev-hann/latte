@@ -13,7 +13,7 @@
       "versionDescription": "Listen music with Latte",
       "downloadURL": "https://github.com/dev-hann/latte/releases/download/v.0.0.1/latte.ipa",
       "localizedDescription": "Listen music with Latte",
-      "iconURL": "",
+      "iconURL": "https://raw.githubusercontent.com/dev-hann/latte/main/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76%401x.png",
       "tintColor": "9b54fd",
       "size": 10201249,
       "screenshotURLs": [
