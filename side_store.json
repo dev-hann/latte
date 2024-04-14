@@ -1,23 +1,17 @@
 {
     "name": "dev-hann",
-    "identifier": "com.dev.hann",
-    "sourceURL":"https://bit.ly/3Q1eD68"
+    "identifier": "com.dev.hann.source",
     "apps": [
         {
+            "beta": true,
             "name": "Latte",
             "bundleIdentifier": "com.hann.latte",,
             "developerName": "dev-hann",
-            "version": "0.0.1",
             "subtitle": "Listen Music With Latte",
-            "beta": true,
+            "version": "0.0.1",
             "versionDate": "2024-04-14T22:00:00.0000000Z",
+  	    "versionDescription": "Battle cable support and more SystemSP games.",
             "downloadURL": "https://github.com/dev-hann/latte/releases/download/v.0.0.1/latte.ipa",
-	    "versions":{
-		"version":"0.0.1",
-            	"date": "2024-04-14T22:00:00.0000000Z",
-            	"downloadURL": "https://github.com/dev-hann/latte/releases/download/v.0.0.1/latte.ipa",
-		"absoluteVersion":"0.0.1"
-	    }
         },
     ],
 }
