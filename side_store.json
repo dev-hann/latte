@@ -1,17 +1,27 @@
 {
-    "name": "dev-hann",
-    "identifier": "com.dev.hann.source",
-    "apps": [
-        {
-            "beta": true,
-            "name": "Latte",
-            "bundleIdentifier": "com.hann.latte",,
-            "developerName": "dev-hann",
-            "subtitle": "Listen Music With Latte",
-            "version": "0.0.1",
-            "versionDate": "2024-04-14T22:00:00.0000000Z",
-  	    "versionDescription": "Battle cable support and more SystemSP games.",
-            "downloadURL": "https://github.com/dev-hann/latte/releases/download/v.0.0.1/latte.ipa",
-        },
-    ],
+  "name": "Flyinghead",
+  "identifier": "com.flyinghead.source",
+  "apps": [
+    {
+      "beta": false,
+      "name": "Flycast",
+      "bundleIdentifier": "com.flyinghead.Flycast",
+      "developerName": "Flyinghead",
+      "subtitle": "Dreamcast, Naomi and Atomiswave emulator.",
+      "version": "v2.3.1",
+      "versionDate": "2024-03-16T17:12:00+01:00",
+      "versionDescription": "Battle cable support and more SystemSP games.",
+      "downloadURL": "https://github.com/flyinghead/flycast/releases/download/v2.3/Flycast-2.3.1.ipa",
+      "localizedDescription": "Flycast is a Dreamcast, Naomi, Naomi 2 and Atomiswave emulator.",
+      "iconURL": "https://github.com/flyinghead/flycast/raw/master/shell/linux/flycast.png",
+      "tintColor": "9b54fd",
+      "size": 16799249,
+      "screenshotURLs": [
+        "https://github.com/flyinghead/flycast/raw/master/shell/imgs/screenshot1.png",
+        "https://github.com/flyinghead/flycast/raw/master/shell/imgs/screenshot2.png",
+        "https://github.com/flyinghead/flycast/raw/master/shell/imgs/screenshot3.png"
+      ]
+    }
+  ]
 }
+
