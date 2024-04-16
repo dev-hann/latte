@@ -22,6 +22,10 @@ class Song extends Equatable {
     return list.first.url.toString();
   }
 
+  String get thumbnail {
+    return "https://img.youtube.com/vi/$youtubeID/default.jpg";
+  }
+
   @override
   List<Object?> get props => [
         title,

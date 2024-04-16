@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 import 'package:latte/model/play_list.dart';
 import 'package:latte/model/song.dart';
 import 'package:rxdart/rxdart.dart';
@@ -74,7 +75,15 @@ class SongBloc extends Bloc<SongEvent, SongState> {
           currentsong: song,
         ),
       );
-      await audio.setUrl(audioURL);
+      final source = AudioSource.uri(
+        Uri.parse(audioURL),
+        tag: MediaItem(
+          id: song.youtubeID,
+          title: song.title,
+          artUri: Uri.parse(song.thumbnail),
+        ),
+      );
+      await audio.setAudioSource(source);
       audio.play();
     }
   }
