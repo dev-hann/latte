@@ -29,6 +29,11 @@ class SongBloc extends Bloc<SongEvent, SongState> {
 
   final audio = AudioPlayer();
   FutureOr<void> _onInited(SongInited event, Emitter<SongState> emit) async {
+    await JustAudioBackground.init(
+      androidNotificationChannelId: 'com.hann.latte.audio',
+      androidNotificationChannelName: 'audio channel',
+      androidNotificationOngoing: true,
+    );
     final stream = Rx.combineLatest2<PlayerState, Duration, SongState>(
       audio.playerStateStream,
       audio.positionStream,
@@ -83,8 +88,13 @@ class SongBloc extends Bloc<SongEvent, SongState> {
           artUri: Uri.parse(song.thumbnail),
         ),
       );
-      await audio.setAudioSource(source);
-      audio.play();
+      await audio.setAudioSource(
+        source,
+        preload: false,
+      );
+      if (!state.isPlaying) {
+        audio.play();
+      }
     }
   }
 

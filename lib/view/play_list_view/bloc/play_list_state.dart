@@ -3,25 +3,20 @@ part of 'play_list_bloc.dart';
 
 class PlayListState extends Equatable {
   const PlayListState({
-    this.list = const [],
-    this.currentIndex = 0,
+    this.playList = const PlayList(title: "Play List"),
   });
-  final List<PlayList> list;
-  final int currentIndex;
+  final PlayList playList;
 
   @override
   List<Object> get props => [
-        list,
-        currentIndex,
+        playList,
       ];
 
   PlayListState copyWith({
-    List<PlayList>? list,
-    int? currentIndex,
+    PlayList? playList,
   }) {
     return PlayListState(
-      list: list ?? this.list,
-      currentIndex: currentIndex ?? this.currentIndex,
+      playList: playList ?? this.playList,
     );
   }
 }

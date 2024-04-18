@@ -23,7 +23,6 @@ class BottomPlayerView extends StatelessWidget {
             if (isLoading) {
               return;
             }
-
             if (isPlaying) {
               bloc.add(SongPaused());
             } else {

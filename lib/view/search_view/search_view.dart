@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:latte/view/play_list_view/bloc/play_list_bloc.dart';
 import 'package:latte/view/search_view/bloc/search_bloc.dart';
 import 'package:latte/view/song_view/bloc/song_bloc.dart';
 
@@ -22,6 +23,7 @@ class SearchView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<SearchBloc, SearchState>(
       builder: (context, state) {
+        final listBloc = BlocProvider.of<PlayListBloc>(context);
         final searchBloc = BlocProvider.of<SearchBloc>(context);
         final songBloc = BlocProvider.of<SongBloc>(context);
         final resultList = state.resultList;
@@ -50,15 +52,17 @@ class SearchView extends StatelessWidget {
                         );
                       }
                       return ListView.builder(
+                        padding: const EdgeInsets.only(
+                          bottom: kToolbarHeight * 1.3,
+                        ),
                         itemCount: resultList.length,
                         itemBuilder: (_, index) {
                           final song = resultList[index];
                           return Card(
                             child: ListTile(
                               onTap: () {
-                                songBloc.add(
-                                  SongPlayed(song),
-                                );
+                                listBloc.add(PlayListSongAdded(song));
+                                songBloc.add(SongPlayed(song));
                               },
                               title: Text(song.title),
                               subtitle: Text(song.duration.toString()),

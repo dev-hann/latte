@@ -11,3 +11,8 @@ class PlayListIndexUpdated extends PlayListEvent {
   const PlayListIndexUpdated(this.index);
   final int index;
 }
+
+class PlayListSongAdded extends PlayListEvent {
+  const PlayListSongAdded(this.song);
+  final Song song;
+}

@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:just_audio_background/just_audio_background.dart';
-import 'package:latte/view/home_view.dart';
+import 'package:latte/view/home_view/bloc/home_bloc.dart';
+import 'package:latte/view/home_view/home_view.dart';
 import 'package:latte/view/play_list_view/bloc/play_list_bloc.dart';
 import 'package:latte/view/search_view/bloc/search_bloc.dart';
 import 'package:latte/view/song_view/bloc/song_bloc.dart';
 
 void main() async {
-  await JustAudioBackground.init(
-    androidNotificationChannelId: 'com.hann.latte.audio',
-    androidNotificationChannelName: 'audio channel',
-    androidNotificationOngoing: true,
-  );
   runApp(const MyApp());
 }
 
@@ -27,6 +22,10 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(
           seedColor: Colors.deepPurple,
         ),
+        bottomSheetTheme: const BottomSheetThemeData(
+          backgroundColor: Colors.transparent,
+          elevation: 0.0,
+        ),
       ),
       home: MultiBlocProvider(
         providers: [
@@ -38,6 +37,9 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider(
             create: (_) => SearchBloc(),
+          ),
+          BlocProvider(
+            create: (_) => HomeBloc(),
           ),
         ],
         child: const HomeView(),
