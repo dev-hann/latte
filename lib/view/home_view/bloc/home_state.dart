@@ -2,24 +2,29 @@ part of 'home_bloc.dart';
 
 class HomeState extends Equatable {
   const HomeState({
-    this.index = 0,
+    this.pageType = PageType.dashboard,
+    this.bottomIndex = 0,
     required this.pageController,
   });
-  final int index;
+  final PageType pageType;
+  final int bottomIndex;
   final PageController pageController;
 
   @override
   List<Object> get props => [
-        index,
+        pageType,
+        bottomIndex,
         pageController,
       ];
 
   HomeState copyWith({
-    int? index,
+    PageType? pageType,
+    int? bottomIndex,
     PageController? pageController,
   }) {
     return HomeState(
-      index: index ?? this.index,
+      pageType: pageType ?? this.pageType,
+      bottomIndex: bottomIndex ?? this.bottomIndex,
       pageController: pageController ?? this.pageController,
     );
   }

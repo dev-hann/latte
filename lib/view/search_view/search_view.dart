@@ -21,63 +21,65 @@ class SearchView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SearchBloc, SearchState>(
-      builder: (context, state) {
-        final listBloc = BlocProvider.of<PlayListBloc>(context);
-        final searchBloc = BlocProvider.of<SearchBloc>(context);
-        final songBloc = BlocProvider.of<SongBloc>(context);
-        final resultList = state.resultList;
-        return Scaffold(
-          body: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16.0,
-            ),
-            child: Column(
-              children: [
-                searchTextField(
-                  controller: state.queryController,
-                  onSeachTap: () {
-                    searchBloc.add(
-                      SearchQueried(),
-                    );
-                  },
-                ),
-                const SizedBox(height: 16.0),
-                Expanded(
-                  child: Builder(
-                    builder: (context) {
-                      if (state.isSearching) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }
-                      return ListView.builder(
-                        padding: const EdgeInsets.only(
-                          bottom: kToolbarHeight * 1.3,
-                        ),
-                        itemCount: resultList.length,
-                        itemBuilder: (_, index) {
-                          final song = resultList[index];
-                          return Card(
-                            child: ListTile(
-                              onTap: () {
-                                listBloc.add(PlayListSongAdded(song));
-                                songBloc.add(SongPlayed(song));
-                              },
-                              title: Text(song.title),
-                              subtitle: Text(song.duration.toString()),
-                            ),
-                          );
-                        },
+    return Scaffold(
+      body: BlocBuilder<SearchBloc, SearchState>(
+        builder: (context, state) {
+          final listBloc = BlocProvider.of<PlayListBloc>(context);
+          final searchBloc = BlocProvider.of<SearchBloc>(context);
+          final songBloc = BlocProvider.of<SongBloc>(context);
+          final resultList = state.resultList;
+          return Scaffold(
+            body: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+              ),
+              child: Column(
+                children: [
+                  searchTextField(
+                    controller: state.queryController,
+                    onSeachTap: () {
+                      searchBloc.add(
+                        SearchQueried(),
                       );
                     },
                   ),
-                ),
-              ],
+                  const SizedBox(height: 16.0),
+                  Expanded(
+                    child: Builder(
+                      builder: (context) {
+                        if (state.isSearching) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                        return ListView.builder(
+                          padding: const EdgeInsets.only(
+                            bottom: kToolbarHeight * 2,
+                          ),
+                          itemCount: resultList.length,
+                          itemBuilder: (_, index) {
+                            final song = resultList[index];
+                            return Card(
+                              child: ListTile(
+                                onTap: () {
+                                  listBloc.add(PlayListSongAdded(song));
+                                  songBloc.add(SongPlayed(song));
+                                },
+                                title: Text(song.title),
+                                subtitle: Text(song.duration.toString()),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }
