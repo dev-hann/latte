@@ -97,11 +97,8 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
           artUri: Uri.parse(song.thumbnail),
         ),
       );
+      await audio.setAudioSource(source);
       await audio.setLoopMode(LoopMode.one);
-      await audio.setAudioSource(
-        source,
-        preload: false,
-      );
       if (!state.isPlaying) {
         audio.play();
       }
