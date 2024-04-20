@@ -21,11 +21,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: Colors.deepPurple,
+          brightness: Brightness.dark,
         ),
-        bottomSheetTheme: const BottomSheetThemeData(
-          backgroundColor: Colors.transparent,
-          elevation: 0.0,
-        ),
+        // bottomSheetTheme: const BottomSheetThemeData(
+        //   backgroundColor: Colors.transparent,
+        //   elevation: 0.0,
+        // ),
       ),
       home: MultiBlocProvider(
         providers: [

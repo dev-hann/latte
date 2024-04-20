@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:latte/util/time_format.dart';
 import 'package:latte/view/play_list_view/bloc/play_list_bloc.dart';
 import 'package:latte/view/player_view/bloc/music_player_bloc.dart';
 
@@ -26,7 +27,9 @@ class PlayListView extends StatelessWidget {
                   songBloc.add(MusicPlayerPlayed(song));
                 },
                 title: Text(song.title),
-                subtitle: Text(song.youtubeID),
+                subtitle: Text(
+                  TimeFormat.songDuration(song.duration),
+                ),
               ),
             );
           },

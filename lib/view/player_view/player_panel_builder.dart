@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:latte/view/player_view/bloc/music_player_bloc.dart';
+import 'package:latte/view/player_view/mini_player_view.dart';
 import 'package:latte/view/player_view/player_view.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
@@ -15,15 +16,7 @@ class PlayerPanelBuilder extends StatelessWidget {
   final Widget body;
 
   Widget bottomPlayerWidget() {
-    return const ColoredBox(
-      color: Colors.red,
-      child: SizedBox(
-        height: minHeight,
-        child: Center(
-          child: Text("BottomPlayer"),
-        ),
-      ),
-    );
+    return const MiniPlayerView();
   }
 
   Widget playerWidget() {
@@ -37,31 +30,27 @@ class PlayerPanelBuilder extends StatelessWidget {
         final bloc = BlocProvider.of<MusicPlayerBloc>(context);
         final panelController = state.panelController;
         return SlidingUpPanel(
+          color: Theme.of(context).cardColor,
           onPanelSlide: (value) {
             bloc.add(MusinPlayerPanelOffsetUpdatd(value));
           },
-          minHeight: kToolbarHeight * 1.2,
+          minHeight: minHeight,
           controller: panelController,
           maxHeight: MediaQuery.of(context).size.height,
-          panel: GestureDetector(
-            onTap: () {
-              panelController.open();
-            },
-            child: Stack(
-              children: [
-                Opacity(
-                  opacity: 1 - state.panelOffset,
-                  child: Align(
-                    alignment: Alignment.topCenter,
-                    child: bottomPlayerWidget(),
-                  ),
+          panel: Stack(
+            children: [
+              Opacity(
+                opacity: state.panelOffset,
+                child: playerWidget(),
+              ),
+              Opacity(
+                opacity: 1 - state.panelOffset,
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: bottomPlayerWidget(),
                 ),
-                Opacity(
-                  opacity: state.panelOffset,
-                  child: playerWidget(),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
           body: body,
         );

@@ -38,6 +38,7 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
       androidNotificationChannelName: 'audio channel',
       androidNotificationOngoing: true,
     );
+    state.panelController.hide();
     final stream = Rx.combineLatest2<PlayerState, Duration, MusicPlayerState>(
       audio.playerStateStream,
       audio.positionStream,
@@ -67,6 +68,9 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
       }
       return;
     }
+    if (songList.isEmpty) {
+      await state.panelController.show();
+    }
 
     if (!songList.contains(song)) {
       final newSongList = [...songList, song];
@@ -93,6 +97,7 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
           artUri: Uri.parse(song.thumbnail),
         ),
       );
+      await audio.setLoopMode(LoopMode.one);
       await audio.setAudioSource(
         source,
         preload: false,
