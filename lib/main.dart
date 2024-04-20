@@ -4,7 +4,7 @@ import 'package:latte/view/home_view/bloc/home_bloc.dart';
 import 'package:latte/view/home_view/home_view.dart';
 import 'package:latte/view/play_list_view/bloc/play_list_bloc.dart';
 import 'package:latte/view/search_view/bloc/search_bloc.dart';
-import 'package:latte/view/song_view/bloc/song_bloc.dart';
+import 'package:latte/view/player_view/bloc/music_player_bloc.dart';
 
 void main() async {
   runApp(const MyApp());
@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
       home: MultiBlocProvider(
         providers: [
           BlocProvider(
-            create: (_) => SongBloc(),
+            create: (_) => MusicPlayerBloc(),
           ),
           BlocProvider(
             create: (_) => PlayListBloc(),

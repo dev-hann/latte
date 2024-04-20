@@ -7,34 +7,38 @@ import 'package:just_audio_background/just_audio_background.dart';
 import 'package:latte/model/play_list.dart';
 import 'package:latte/model/song.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
-part 'song_event.dart';
-part 'song_state.dart';
+part 'music_player_event.dart';
+part 'music_player_state.dart';
 
-class SongBloc extends Bloc<SongEvent, SongState> {
-  SongBloc()
+class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
+  MusicPlayerBloc()
       : super(
-          SongState(
+          MusicPlayerState(
             playList: const PlayList(
               title: 'Default List',
             ),
             playerState: PlayerState(false, ProcessingState.idle),
+            panelController: PanelController(),
           ),
         ) {
-    on<SongInited>(_onInited);
-    on<SongPlayed>(_onPlayed);
-    on<SongPaused>(_onPaused);
-    on<SongStopped>(_onStopped);
+    on<MusicPlayerInited>(_onInited);
+    on<MusicPlayerPlayed>(_onPlayed);
+    on<MusicPlayerPaused>(_onPaused);
+    on<MusicPlayerStopped>(_onStopped);
+    on<MusinPlayerPanelOffsetUpdatd>(_onPenelOffsetUpdated);
   }
 
   final audio = AudioPlayer();
-  FutureOr<void> _onInited(SongInited event, Emitter<SongState> emit) async {
+  FutureOr<void> _onInited(
+      MusicPlayerInited event, Emitter<MusicPlayerState> emit) async {
     await JustAudioBackground.init(
       androidNotificationChannelId: 'com.hann.latte.audio',
       androidNotificationChannelName: 'audio channel',
       androidNotificationOngoing: true,
     );
-    final stream = Rx.combineLatest2<PlayerState, Duration, SongState>(
+    final stream = Rx.combineLatest2<PlayerState, Duration, MusicPlayerState>(
       audio.playerStateStream,
       audio.positionStream,
       (playerState, position) {
@@ -52,7 +56,8 @@ class SongBloc extends Bloc<SongEvent, SongState> {
     );
   }
 
-  FutureOr<void> _onPlayed(SongPlayed event, Emitter<SongState> emit) async {
+  FutureOr<void> _onPlayed(
+      MusicPlayerPlayed event, Emitter<MusicPlayerState> emit) async {
     final playList = state.playList;
     final songList = playList.songList;
     final song = event.song;
@@ -98,15 +103,26 @@ class SongBloc extends Bloc<SongEvent, SongState> {
     }
   }
 
-  FutureOr<void> _onStopped(SongStopped event, Emitter<SongState> emit) {
+  FutureOr<void> _onStopped(
+      MusicPlayerStopped event, Emitter<MusicPlayerState> emit) {
     if (audio.playing) {
       audio.stop();
     }
   }
 
-  FutureOr<void> _onPaused(SongPaused event, Emitter<SongState> emit) {
+  FutureOr<void> _onPaused(
+      MusicPlayerPaused event, Emitter<MusicPlayerState> emit) {
     if (audio.playing) {
       audio.pause();
     }
+  }
+
+  FutureOr<void> _onPenelOffsetUpdated(
+      MusinPlayerPanelOffsetUpdatd event, Emitter<MusicPlayerState> emit) {
+    emit(
+      state.copyWith(
+        panelOffset: event.panelOffset,
+      ),
+    );
   }
 }

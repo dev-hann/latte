@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:latte/util/time_format.dart';
-import 'package:latte/view/song_view/bloc/song_bloc.dart';
+import 'package:latte/view/player_view/bloc/music_player_bloc.dart';
 import 'package:latte/widget/slide_text.dart';
 
-class BottomPlayerView extends StatelessWidget {
-  const BottomPlayerView({super.key});
+class MiniPlayerView extends StatelessWidget {
+  const MiniPlayerView({super.key});
 
   Widget stateButton() {
-    return BlocBuilder<SongBloc, SongState>(
+    return BlocBuilder<MusicPlayerBloc, MusicPlayerState>(
       buildWhen: (previous, current) {
         return previous.playerState != current.playerState;
       },
       builder: (context, state) {
-        final bloc = BlocProvider.of<SongBloc>(context);
+        final bloc = BlocProvider.of<MusicPlayerBloc>(context);
         final isPlaying = state.isPlaying;
         final isLoading = state.isLoading;
 
@@ -24,9 +23,9 @@ class BottomPlayerView extends StatelessWidget {
               return;
             }
             if (isPlaying) {
-              bloc.add(SongPaused());
+              bloc.add(MusicPlayerPaused());
             } else {
-              bloc.add(const SongPlayed());
+              bloc.add(const MusicPlayerPlayed());
             }
           },
           icon: Builder(
@@ -49,7 +48,7 @@ class BottomPlayerView extends StatelessWidget {
   }
 
   Widget titleWidget() {
-    return BlocBuilder<SongBloc, SongState>(
+    return BlocBuilder<MusicPlayerBloc, MusicPlayerState>(
       buildWhen: (previous, current) {
         return previous.currentsong?.title != current.currentsong?.title;
       },
@@ -63,7 +62,7 @@ class BottomPlayerView extends StatelessWidget {
   }
 
   Widget timeWidget() {
-    return BlocBuilder<SongBloc, SongState>(
+    return BlocBuilder<MusicPlayerBloc, MusicPlayerState>(
       builder: (context, state) {
         final currentSong = state.currentsong;
         if (currentSong == null) {
@@ -78,7 +77,7 @@ class BottomPlayerView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SongBloc, SongState>(
+    return BlocBuilder<MusicPlayerBloc, MusicPlayerState>(
       buildWhen: (previous, current) {
         return previous.playList != current.playList;
       },

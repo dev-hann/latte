@@ -1,17 +1,20 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-part of 'song_bloc.dart';
+part of 'music_player_bloc.dart';
 
-class SongState extends Equatable {
-  const SongState({
+class MusicPlayerState extends Equatable {
+  const MusicPlayerState({
     this.currentsong,
     this.currentDuration,
     required this.playList,
     required this.playerState,
+    required this.panelController,
+    this.panelOffset = 0.0,
   });
   final Song? currentsong;
   final Duration? currentDuration;
   final PlayList playList;
   final PlayerState playerState;
+  final PanelController panelController;
+  final double panelOffset;
 
   bool get isPlaying {
     return playerState.playing;
@@ -35,19 +38,25 @@ class SongState extends Equatable {
         currentDuration,
         playList,
         playerState,
+        panelController,
+        panelOffset,
       ];
 
-  SongState copyWith({
+  MusicPlayerState copyWith({
     Song? currentsong,
     Duration? currentDuration,
     PlayList? playList,
     PlayerState? playerState,
+    PanelController? panelController,
+    double? panelOffset,
   }) {
-    return SongState(
+    return MusicPlayerState(
       currentsong: currentsong ?? this.currentsong,
       currentDuration: currentDuration ?? this.currentDuration,
       playList: playList ?? this.playList,
       playerState: playerState ?? this.playerState,
+      panelController: panelController ?? this.panelController,
+      panelOffset: panelOffset ?? this.panelOffset,
     );
   }
 }
