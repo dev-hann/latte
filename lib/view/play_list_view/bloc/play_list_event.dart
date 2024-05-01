@@ -7,6 +7,8 @@ abstract class PlayListEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class PlayListInited extends PlayListEvent {}
+
 class PlayListIndexUpdated extends PlayListEvent {
   const PlayListIndexUpdated(this.index);
   final int index;
@@ -14,5 +16,10 @@ class PlayListIndexUpdated extends PlayListEvent {
 
 class PlayListSongAdded extends PlayListEvent {
   const PlayListSongAdded(this.song);
+  final Song song;
+}
+
+class PlayListSongRemoved extends PlayListEvent {
+  const PlayListSongRemoved(this.song);
   final Song song;
 }

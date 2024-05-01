@@ -35,7 +35,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       return Song(
         title: item.title,
         youtubeID: item.id.value,
-        duration: item.duration,
+        duration: item.duration ?? Duration.zero,
       );
     }).toList();
     emit(

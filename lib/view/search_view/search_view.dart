@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:latte/enum/page_type.dart';
+import 'package:latte/view/home_view/bloc/home_bloc.dart';
 import 'package:latte/view/play_list_view/bloc/play_list_bloc.dart';
 import 'package:latte/view/search_view/bloc/search_bloc.dart';
 import 'package:latte/view/player_view/bloc/music_player_bloc.dart';
@@ -35,15 +37,33 @@ class SearchView extends StatelessWidget {
           },
           child: Scaffold(
             appBar: AppBar(
-              title: searchTextField(
-                controller: state.queryController,
-                onSeachTap: () {
-                  searchBloc.add(
-                    SearchQueried(),
-                  );
-                },
-              ),
-            ),
+                leading: IconButton(
+                  onPressed: () {
+                    final bloc = BlocProvider.of<HomeBloc>(context);
+                    bloc.add(
+                      const HomePageTypeUpdated(PageType.playList),
+                    );
+                  },
+                  icon: const Icon(Icons.arrow_back_ios),
+                ),
+                title: searchTextField(
+                  controller: state.queryController,
+                  onSeachTap: () {
+                    searchBloc.add(
+                      SearchQueried(),
+                    );
+                  },
+                ),
+                actions: [
+                  IconButton(
+                    onPressed: () {
+                      searchBloc.add(
+                        SearchQueried(),
+                      );
+                    },
+                    icon: const Icon(Icons.search),
+                  )
+                ]),
             body: Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 16.0,

@@ -2,14 +2,14 @@ part of 'music_player_bloc.dart';
 
 class MusicPlayerState extends Equatable {
   const MusicPlayerState({
-    this.currentsong,
+    this.currentSong,
     this.currentDuration,
     required this.playList,
     required this.playerState,
     required this.panelController,
     this.panelOffset = 0.0,
   });
-  final Song? currentsong;
+  final Song? currentSong;
   final Duration? currentDuration;
   final PlayList playList;
   final PlayerState playerState;
@@ -34,7 +34,7 @@ class MusicPlayerState extends Equatable {
 
   @override
   List<Object?> get props => [
-        currentsong,
+        currentSong,
         currentDuration,
         playList,
         playerState,
@@ -43,7 +43,7 @@ class MusicPlayerState extends Equatable {
       ];
 
   MusicPlayerState copyWith({
-    Song? currentsong,
+    Song? currentSong,
     Duration? currentDuration,
     PlayList? playList,
     PlayerState? playerState,
@@ -51,7 +51,7 @@ class MusicPlayerState extends Equatable {
     double? panelOffset,
   }) {
     return MusicPlayerState(
-      currentsong: currentsong ?? this.currentsong,
+      currentSong: currentSong ?? this.currentSong,
       currentDuration: currentDuration ?? this.currentDuration,
       playList: playList ?? this.playList,
       playerState: playerState ?? this.playerState,

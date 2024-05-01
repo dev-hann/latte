@@ -14,11 +14,11 @@ class MiniPlayerView extends StatelessWidget {
   Widget thumbnailWidget() {
     return BlocBuilder<MusicPlayerBloc, MusicPlayerState>(
       buildWhen: (previous, current) {
-        return previous.currentsong?.thumbnail !=
-            current.currentsong?.thumbnail;
+        return previous.currentSong?.thumbnail !=
+            current.currentSong?.thumbnail;
       },
       builder: (context, state) {
-        final currentSong = state.currentsong;
+        final currentSong = state.currentSong;
         if (currentSong == null) {
           return const SizedBox();
         }
@@ -39,10 +39,10 @@ class MiniPlayerView extends StatelessWidget {
   Widget titleWidget() {
     return BlocBuilder<MusicPlayerBloc, MusicPlayerState>(
       buildWhen: (previous, current) {
-        return previous.currentsong?.title != current.currentsong?.title;
+        return previous.currentSong?.title != current.currentSong?.title;
       },
       builder: (context, state) {
-        final currentSong = state.currentsong;
+        final currentSong = state.currentSong;
         return SlideText(
           currentSong?.title ?? "",
         );
@@ -53,7 +53,7 @@ class MiniPlayerView extends StatelessWidget {
   Widget timeWidget() {
     return BlocBuilder<MusicPlayerBloc, MusicPlayerState>(
       builder: (context, state) {
-        final currentSong = state.currentsong;
+        final currentSong = state.currentSong;
         if (currentSong == null) {
           return const SizedBox();
         }
@@ -69,7 +69,7 @@ class MiniPlayerView extends StatelessWidget {
       builder: (context, state) {
         return MusicProgressWidget(
           currentDuration: state.currentDuration,
-          songDuration: state.currentsong?.duration,
+          songDuration: state.currentSong?.duration,
         );
       },
     );

@@ -37,20 +37,14 @@ class PlayerPanelBuilder extends StatelessWidget {
           minHeight: minHeight,
           controller: panelController,
           maxHeight: MediaQuery.of(context).size.height,
-          panel: Stack(
-            children: [
-              Opacity(
-                opacity: state.panelOffset,
-                child: playerWidget(),
-              ),
-              Opacity(
-                opacity: 1 - state.panelOffset,
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: bottomPlayerWidget(),
-                ),
-              ),
-            ],
+          collapsed: SizedBox(
+            height: minHeight,
+            width: MediaQuery.of(context).size.width,
+            child: bottomPlayerWidget(),
+          ),
+          panel: Opacity(
+            opacity: state.panelOffset,
+            child: playerWidget(),
           ),
           body: body,
         );

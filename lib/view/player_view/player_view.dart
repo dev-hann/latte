@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:latte/util/time_format.dart';
@@ -16,7 +18,7 @@ class PlayerView extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(16.0),
       child: SizedBox.square(
-        dimension: 120.0,
+        dimension: 180.0,
         child: Image.network(
           imageURL,
           fit: BoxFit.cover,
@@ -94,46 +96,67 @@ class PlayerView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 16.0,
-        ),
-        child: BlocBuilder<MusicPlayerBloc, MusicPlayerState>(
-          builder: (context, state) {
-            final currentsong = state.currentsong;
-            if (currentsong == null) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                thumbnailWidget(
-                  imageURL: currentsong.thumbnail,
+    return BlocBuilder<MusicPlayerBloc, MusicPlayerState>(
+      builder: (context, state) {
+        final currentSong = state.currentSong;
+        if (currentSong == null) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        return DecoratedBox(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              opacity: 0.5,
+              image: NetworkImage(
+                currentSong.thumbnail,
+              ),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(
+              sigmaX: 10,
+              sigmaY: 10,
+            ),
+            child: Scaffold(
+              backgroundColor: Colors.transparent,
+              appBar: AppBar(
+                backgroundColor: Colors.transparent,
+                elevation: 0.0,
+              ),
+              body: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
                 ),
-                const SizedBox(height: 16.0),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: titleWidget(
-                    title: currentsong.title,
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    thumbnailWidget(
+                      imageURL: currentSong.thumbnail,
+                    ),
+                    const SizedBox(height: 16.0),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: titleWidget(
+                        title: currentSong.title,
+                      ),
+                    ),
+                    const SizedBox(height: 24.0),
+                    progressWidget(
+                      currentDuration: state.currentDuration,
+                      songDuration: currentSong.duration,
+                    ),
+                    const SizedBox(height: 24.0),
+                    controlButtonsWidget(),
+                  ],
                 ),
-                const SizedBox(height: 24.0),
-                progressWidget(
-                  currentDuration: state.currentDuration,
-                  songDuration: currentsong.duration,
-                ),
-                const SizedBox(height: 24.0),
-                controlButtonsWidget(),
-              ],
-            );
-          },
-        ),
-      ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

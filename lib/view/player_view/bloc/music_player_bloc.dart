@@ -86,7 +86,7 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
     if (audioURL != null) {
       emit(
         state.copyWith(
-          currentsong: song,
+          currentSong: song,
         ),
       );
       final source = AudioSource.uri(
