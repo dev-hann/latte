@@ -4,7 +4,11 @@ abstract class SearchEvent extends Equatable {
   const SearchEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
+
+class SearchInited extends SearchEvent {}
+
+class SearchTextFieldFocused extends SearchEvent {}
 
 class SearchQueried extends SearchEvent {}

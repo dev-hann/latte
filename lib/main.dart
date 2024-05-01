@@ -43,7 +43,11 @@ class MyApp extends StatelessWidget {
             },
           ),
           BlocProvider(
-            create: (_) => SearchBloc(),
+            create: (_) {
+              final bloc = SearchBloc();
+              bloc.add(SearchInited());
+              return bloc;
+            },
           ),
           BlocProvider(
             create: (_) => HomeBloc(),
