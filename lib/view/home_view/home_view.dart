@@ -70,6 +70,10 @@ class _HomeViewState extends State<HomeView> {
             currentIndex: state.bottomIndex,
             onTap: (index) {
               bloc.add(HomeBottomIndexUpdated(index));
+              BlocProvider.of<MusicPlayerBloc>(context)
+                  .state
+                  .panelController
+                  .close();
             },
             items: const [
               BottomNavigationBarItem(

@@ -7,8 +7,18 @@ import 'package:latte/view/play_list_view/bloc/play_list_bloc.dart';
 import 'package:latte/view/search_view/bloc/search_bloc.dart';
 import 'package:latte/view/player_view/bloc/music_player_bloc.dart';
 
-class SearchView extends StatelessWidget {
+class SearchView extends StatefulWidget {
   const SearchView({super.key});
+
+  @override
+  State<SearchView> createState() => _SearchViewState();
+}
+
+class _SearchViewState extends State<SearchView> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   Widget searchTextField({
     required TextEditingController controller,
