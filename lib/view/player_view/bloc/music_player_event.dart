@@ -18,7 +18,19 @@ class MusicPlayerPaused extends MusicPlayerEvent {}
 
 class MusicPlayerStopped extends MusicPlayerEvent {}
 
+class MusicPlayerSeeked extends MusicPlayerEvent {
+  const MusicPlayerSeeked(this.position);
+  final Duration position;
+}
+
 class MusinPlayerPanelOffsetUpdatd extends MusicPlayerEvent {
   const MusinPlayerPanelOffsetUpdatd(this.panelOffset);
   final double panelOffset;
+}
+
+class MusicPlayerSettingInited extends MusicPlayerEvent {}
+
+class MusicPlayerSettingUpdated extends MusicPlayerEvent {
+  const MusicPlayerSettingUpdated(this.setting);
+  final PlayerSetting setting;
 }

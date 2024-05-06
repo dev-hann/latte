@@ -3,9 +3,10 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:just_audio_background/just_audio_background.dart';
 import 'package:latte/model/play_list.dart';
+import 'package:latte/model/player_setting.dart';
 import 'package:latte/model/song.dart';
+import 'package:latte/service/audio_service.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
@@ -24,35 +25,39 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
           ),
         ) {
     on<MusicPlayerInited>(_onInited);
+    on<MusicPlayerSettingInited>(_onSettingInited);
     on<MusicPlayerPlayed>(_onPlayed);
     on<MusicPlayerPaused>(_onPaused);
+    on<MusicPlayerSeeked>(_onSeeked);
     on<MusicPlayerStopped>(_onStopped);
     on<MusinPlayerPanelOffsetUpdatd>(_onPenelOffsetUpdated);
+    on<MusicPlayerSettingUpdated>(_onSettingUpdated);
   }
+  final service = AudioService();
 
-  final audio = AudioPlayer();
   FutureOr<void> _onInited(
       MusicPlayerInited event, Emitter<MusicPlayerState> emit) async {
-    await JustAudioBackground.init(
-      androidNotificationChannelId: 'com.hann.latte.audio',
-      androidNotificationChannelName: 'audio channel',
-      androidNotificationOngoing: true,
-    );
-    state.panelController.hide();
-    final stream = Rx.combineLatest2<PlayerState, Duration, MusicPlayerState>(
-      audio.playerStateStream,
-      audio.positionStream,
-      (playerState, position) {
+    await service.init();
+    add(MusicPlayerSettingInited());
+    final audioStream =
+        Rx.combineLatest3<PlayerState, Duration, Duration, MusicPlayerState>(
+      service.playerStateStream,
+      service.positionStream,
+      service.bufferedPostionStream,
+      (playerState, position, bufferedPosiotion) {
         return state.copyWith(
           playerState: playerState,
           currentDuration: position,
+          bufferedDuration: bufferedPosiotion,
         );
       },
     );
-    await emit.forEach(
-      stream,
-      onData: (newstate) {
-        return newstate;
+    state.panelController.hide();
+
+    return emit.forEach(
+      audioStream,
+      onData: (newState) {
+        return newState;
       },
     );
   }
@@ -64,7 +69,7 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
     final song = event.song;
     if (song == null) {
       if (state.playerState.processingState == ProcessingState.ready) {
-        audio.play();
+        service.play();
       }
       return;
     }
@@ -82,41 +87,25 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
         ),
       );
     }
-    final audioURL = await song.audioURL;
-    if (audioURL != null) {
+    final isOK = await service.setAudio(song);
+    if (isOK) {
       emit(
         state.copyWith(
           currentSong: song,
         ),
       );
-      final source = AudioSource.uri(
-        Uri.parse(audioURL),
-        tag: MediaItem(
-          id: song.youtubeID,
-          title: song.title,
-          artUri: Uri.parse(song.thumbnail),
-        ),
-      );
-      await audio.setAudioSource(source);
-      await audio.setLoopMode(LoopMode.one);
-      if (!state.isPlaying) {
-        audio.play();
-      }
+      service.play();
     }
   }
 
   FutureOr<void> _onStopped(
       MusicPlayerStopped event, Emitter<MusicPlayerState> emit) {
-    if (audio.playing) {
-      audio.stop();
-    }
+    service.stop();
   }
 
   FutureOr<void> _onPaused(
       MusicPlayerPaused event, Emitter<MusicPlayerState> emit) {
-    if (audio.playing) {
-      audio.pause();
-    }
+    service.pause();
   }
 
   FutureOr<void> _onPenelOffsetUpdated(
@@ -126,5 +115,36 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
         panelOffset: event.panelOffset,
       ),
     );
+  }
+
+  FutureOr<void> _onSettingInited(
+      MusicPlayerSettingInited event, Emitter<MusicPlayerState> emit) {
+    final setting = service.loadSetting();
+    emit(
+      state.copyWith(
+        setting: setting,
+      ),
+    );
+
+    return emit.onEach(
+      service.playerSettingStream,
+      onData: (setting) {
+        emit(
+          state.copyWith(
+            setting: setting,
+          ),
+        );
+      },
+    );
+  }
+
+  FutureOr<void> _onSettingUpdated(
+      MusicPlayerSettingUpdated event, Emitter<MusicPlayerState> emit) {
+    return service.updateSetting(event.setting);
+  }
+
+  FutureOr<void> _onSeeked(
+      MusicPlayerSeeked event, Emitter<MusicPlayerState> emit) {
+    return service.seek(event.position);
   }
 }

@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:latte/util/time_format.dart';
 import 'package:latte/view/player_view/bloc/music_player_bloc.dart';
 import 'package:latte/widget/music_progress_widget.dart';
@@ -18,7 +19,7 @@ class PlayerView extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(16.0),
       child: SizedBox.square(
-        dimension: 180.0,
+        dimension: 240.0,
         child: Image.network(
           imageURL,
           fit: BoxFit.cover,
@@ -41,40 +42,33 @@ class PlayerView extends StatelessWidget {
 
   Widget progressWidget({
     required Duration? currentDuration,
+    required Duration? bufferedDucation,
     required Duration? songDuration,
+    required Function(Duration position) onSeek,
   }) {
-    return Column(
-      children: [
-        MusicProgressWidget(
-          currentDuration: currentDuration,
-          songDuration: songDuration,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(TimeFormat.songDuration(currentDuration)),
-            Text(TimeFormat.songDuration(songDuration)),
-          ],
-        ),
-      ],
+    return MusicProgressWidget(
+      currentDuration: currentDuration,
+      buffredDuration: bufferedDucation,
+      songDuration: songDuration,
+      onSeek: onSeek,
     );
   }
 
   Widget controlButtonsWidget() {
-    return const SizedBox(
+    return SizedBox(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Icon(
+          const Icon(
             Icons.shuffle,
           ),
-          Icon(
-            Icons.skip_previous,
+          const Icon(
+            Icons.fast_rewind,
           ),
-          DecoratedBox(
+          const DecoratedBox(
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Colors.grey,
+              color: Colors.black,
             ),
             child: Padding(
               padding: EdgeInsets.all(8.0),
@@ -83,14 +77,66 @@ class PlayerView extends StatelessWidget {
               ),
             ),
           ),
-          Icon(
-            Icons.skip_next,
+          const Icon(
+            Icons.fast_forward,
           ),
-          Icon(
-            Icons.loop,
-          ),
+          loopModeWidget(),
         ],
       ),
+    );
+  }
+
+  Widget loopModeWidget() {
+    return BlocBuilder<MusicPlayerBloc, MusicPlayerState>(
+      buildWhen: (previous, current) {
+        return previous.setting != current.setting;
+      },
+      builder: (context, state) {
+        final bloc = BlocProvider.of<MusicPlayerBloc>(context);
+        final setting = state.setting;
+        final loopMode = state.setting.loopMode;
+        return GestureDetector(
+          onTap: () {
+            LoopMode nextMode;
+            switch (loopMode) {
+              case LoopMode.off:
+                nextMode = LoopMode.all;
+                break;
+              case LoopMode.one:
+                nextMode = LoopMode.off;
+                break;
+              case LoopMode.all:
+                nextMode = LoopMode.one;
+                break;
+            }
+            bloc.add(
+              MusicPlayerSettingUpdated(
+                setting.copyWith(
+                  loopMode: nextMode,
+                ),
+              ),
+            );
+          },
+          child: Builder(
+            builder: (context) {
+              switch (loopMode) {
+                case LoopMode.off:
+                  return const Icon(
+                    Icons.repeat,
+                  );
+                case LoopMode.one:
+                  return const Icon(
+                    Icons.repeat_one,
+                  );
+                case LoopMode.all:
+                  return const Icon(
+                    Icons.repeat_on,
+                  );
+              }
+            },
+          ),
+        );
+      },
     );
   }
 
@@ -98,6 +144,7 @@ class PlayerView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<MusicPlayerBloc, MusicPlayerState>(
       builder: (context, state) {
+        final bloc = BlocProvider.of<MusicPlayerBloc>(context);
         final currentSong = state.currentSong;
         if (currentSong == null) {
           return const Center(
@@ -146,7 +193,13 @@ class PlayerView extends StatelessWidget {
                     const SizedBox(height: 24.0),
                     progressWidget(
                       currentDuration: state.currentDuration,
+                      bufferedDucation: state.bufferedDuration,
                       songDuration: currentSong.duration,
+                      onSeek: (position) {
+                        bloc.add(
+                          MusicPlayerSeeked(position),
+                        );
+                      },
                     ),
                     const SizedBox(height: 24.0),
                     controlButtonsWidget(),

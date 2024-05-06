@@ -69,7 +69,10 @@ class MiniPlayerView extends StatelessWidget {
       builder: (context, state) {
         return MusicProgressWidget(
           currentDuration: state.currentDuration,
+          buffredDuration: state.bufferedDuration,
           songDuration: state.currentSong?.duration,
+          showTimeLabel: false,
+          showThumb: false,
         );
       },
     );

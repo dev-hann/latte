@@ -33,7 +33,11 @@ class MyApp extends StatelessWidget {
       home: MultiBlocProvider(
         providers: [
           BlocProvider(
-            create: (_) => MusicPlayerBloc(),
+            create: (_) {
+              final bloc = MusicPlayerBloc();
+              bloc.add(MusicPlayerInited());
+              return bloc;
+            },
           ),
           BlocProvider(
             create: (_) {

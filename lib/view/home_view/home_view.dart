@@ -17,13 +17,6 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   @override
-  void initState() {
-    super.initState();
-    BlocProvider.of<MusicPlayerBloc>(context, listen: false)
-        .add(MusicPlayerInited());
-  }
-
-  @override
   Widget build(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
