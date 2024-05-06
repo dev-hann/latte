@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:latte/util/time_format.dart';
 import 'package:latte/view/player_view/bloc/music_player_bloc.dart';
 import 'package:latte/widget/music_progress_widget.dart';
 import 'package:latte/widget/play_button.dart';
@@ -54,7 +53,22 @@ class PlayerView extends StatelessWidget {
     );
   }
 
-  Widget controlButtonsWidget() {
+  Widget controlButtonWidget({
+    required VoidCallback onTap,
+    required Widget child,
+  }) {
+    return IconButton(
+      onPressed: onTap,
+      icon: child,
+    );
+  }
+
+  Widget controlButtonsWidget({
+    required LoopMode loopMode,
+    required Function(LoopMode value) onLoopModeChaned,
+    required VoidCallback onFastForwardTap,
+    required VoidCallback onFastRewindTap,
+  }) {
     return SizedBox(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -62,8 +76,11 @@ class PlayerView extends StatelessWidget {
           const Icon(
             Icons.shuffle,
           ),
-          const Icon(
-            Icons.fast_rewind,
+          controlButtonWidget(
+            onTap: onFastRewindTap,
+            child: const Icon(
+              Icons.fast_rewind,
+            ),
           ),
           const DecoratedBox(
             decoration: BoxDecoration(
@@ -77,66 +94,59 @@ class PlayerView extends StatelessWidget {
               ),
             ),
           ),
-          const Icon(
-            Icons.fast_forward,
+          controlButtonWidget(
+            onTap: onFastForwardTap,
+            child: const Icon(
+              Icons.fast_forward,
+            ),
           ),
-          loopModeWidget(),
+          loopModeWidget(
+            loopMode: loopMode,
+            onLoopModeChaned: onLoopModeChaned,
+          ),
         ],
       ),
     );
   }
 
-  Widget loopModeWidget() {
-    return BlocBuilder<MusicPlayerBloc, MusicPlayerState>(
-      buildWhen: (previous, current) {
-        return previous.setting != current.setting;
+  Widget loopModeWidget({
+    required LoopMode loopMode,
+    required Function(LoopMode value) onLoopModeChaned,
+  }) {
+    return GestureDetector(
+      onTap: () {
+        LoopMode nextMode;
+        switch (loopMode) {
+          case LoopMode.off:
+            nextMode = LoopMode.all;
+            break;
+          case LoopMode.one:
+            nextMode = LoopMode.off;
+            break;
+          case LoopMode.all:
+            nextMode = LoopMode.one;
+            break;
+        }
+        onLoopModeChaned(nextMode);
       },
-      builder: (context, state) {
-        final bloc = BlocProvider.of<MusicPlayerBloc>(context);
-        final setting = state.setting;
-        final loopMode = state.setting.loopMode;
-        return GestureDetector(
-          onTap: () {
-            LoopMode nextMode;
-            switch (loopMode) {
-              case LoopMode.off:
-                nextMode = LoopMode.all;
-                break;
-              case LoopMode.one:
-                nextMode = LoopMode.off;
-                break;
-              case LoopMode.all:
-                nextMode = LoopMode.one;
-                break;
-            }
-            bloc.add(
-              MusicPlayerSettingUpdated(
-                setting.copyWith(
-                  loopMode: nextMode,
-                ),
-              ),
-            );
-          },
-          child: Builder(
-            builder: (context) {
-              switch (loopMode) {
-                case LoopMode.off:
-                  return const Icon(
-                    Icons.repeat,
-                  );
-                case LoopMode.one:
-                  return const Icon(
-                    Icons.repeat_one,
-                  );
-                case LoopMode.all:
-                  return const Icon(
-                    Icons.repeat_on,
-                  );
-              }
-            },
-          ),
-        );
-      },
+      child: Builder(
+        builder: (context) {
+          switch (loopMode) {
+            case LoopMode.off:
+              return const Icon(
+                Icons.repeat,
+              );
+            case LoopMode.one:
+              return const Icon(
+                Icons.repeat_one,
+              );
+            case LoopMode.all:
+              return const Icon(
+                Icons.repeat_on,
+              );
+          }
+        },
+      ),
     );
   }
 
@@ -145,7 +155,11 @@ class PlayerView extends StatelessWidget {
     return BlocBuilder<MusicPlayerBloc, MusicPlayerState>(
       builder: (context, state) {
         final bloc = BlocProvider.of<MusicPlayerBloc>(context);
+
+        final setting = state.setting;
+        final loopMode = state.setting.loopMode;
         final currentSong = state.currentSong;
+        final currentDuration = state.currentDuration;
         if (currentSong == null) {
           return const Center(
             child: CircularProgressIndicator(),
@@ -192,7 +206,7 @@ class PlayerView extends StatelessWidget {
                     ),
                     const SizedBox(height: 24.0),
                     progressWidget(
-                      currentDuration: state.currentDuration,
+                      currentDuration: currentDuration,
                       bufferedDucation: state.bufferedDuration,
                       songDuration: currentSong.duration,
                       onSeek: (position) {
@@ -202,7 +216,36 @@ class PlayerView extends StatelessWidget {
                       },
                     ),
                     const SizedBox(height: 24.0),
-                    controlButtonsWidget(),
+                    controlButtonsWidget(
+                      loopMode: loopMode,
+                      onLoopModeChaned: (value) {
+                        bloc.add(
+                          MusicPlayerSettingUpdated(
+                            setting.copyWith(
+                              loopMode: value,
+                            ),
+                          ),
+                        );
+                      },
+                      onFastForwardTap: () {
+                        if (currentDuration != null) {
+                          final position =
+                              currentDuration + const Duration(seconds: 15);
+                          bloc.add(
+                            MusicPlayerSeeked(position),
+                          );
+                        }
+                      },
+                      onFastRewindTap: () {
+                        if (currentDuration != null) {
+                          final position =
+                              currentDuration - const Duration(seconds: 15);
+                          bloc.add(
+                            MusicPlayerSeeked(position),
+                          );
+                        }
+                      },
+                    ),
                   ],
                 ),
               ),
