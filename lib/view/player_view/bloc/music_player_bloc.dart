@@ -68,9 +68,11 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
     final playList = state.playList;
     final songList = playList.songList;
     final song = event.song;
-    final panelController = state.panelController;
 
-    await panelController.show();
+    final panelController = state.panelController;
+    if (!panelController.isPanelShown) {
+      await panelController.show();
+    }
 
     if (song == null) {
       if (state.playerState.processingState == ProcessingState.ready) {

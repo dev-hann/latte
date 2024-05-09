@@ -37,7 +37,15 @@ class AudioService {
   Future<bool> setAudio(Song song) async {
     final audioURL = await song.audioURL;
     if (audioURL != null) {
-      final source = LockCachingAudioSource(
+      // final source = LockCachingAudioSource(
+      //   Uri.parse(audioURL),
+      //   tag: MediaItem(
+      //     id: song.youtubeID,
+      //     title: song.title,
+      //     artUri: Uri.parse(song.thumbnail),
+      //   ),
+      // );
+      final source = HlsAudioSource(
         Uri.parse(audioURL),
         tag: MediaItem(
           id: song.youtubeID,

@@ -59,6 +59,7 @@ class PlayerView extends StatelessWidget {
   }) {
     return IconButton(
       onPressed: onTap,
+      iconSize: 32.0,
       icon: child,
     );
   }
@@ -113,7 +114,7 @@ class PlayerView extends StatelessWidget {
     required LoopMode loopMode,
     required Function(LoopMode value) onLoopModeChaned,
   }) {
-    return GestureDetector(
+    return controlButtonWidget(
       onTap: () {
         LoopMode nextMode;
         switch (loopMode) {
