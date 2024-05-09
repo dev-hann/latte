@@ -52,7 +52,8 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
         );
       },
     );
-    state.panelController.hide();
+    final panelController = state.panelController;
+    await panelController.hide();
 
     return emit.forEach(
       audioStream,
@@ -67,15 +68,19 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
     final playList = state.playList;
     final songList = playList.songList;
     final song = event.song;
+    final panelController = state.panelController;
+
+    await panelController.show();
+
     if (song == null) {
       if (state.playerState.processingState == ProcessingState.ready) {
         service.play();
       }
       return;
     }
-    if (songList.isEmpty) {
-      await state.panelController.show();
-    }
+    // if (songList.isEmpty) {
+    //   await state.panelController.show();
+    // }
 
     if (!songList.contains(song)) {
       final newSongList = [...songList, song];

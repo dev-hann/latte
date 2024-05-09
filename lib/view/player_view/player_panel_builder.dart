@@ -11,17 +11,11 @@ class PlayerPanelBuilder extends StatelessWidget {
   const PlayerPanelBuilder({
     super.key,
     required this.body,
+    required this.bottom,
   });
 
   final Widget body;
-
-  Widget bottomPlayerWidget() {
-    return const MiniPlayerView();
-  }
-
-  Widget playerWidget() {
-    return const PlayerView();
-  }
+  final Widget bottom;
 
   @override
   Widget build(BuildContext context) {
@@ -29,24 +23,40 @@ class PlayerPanelBuilder extends StatelessWidget {
       builder: (context, state) {
         final bloc = BlocProvider.of<MusicPlayerBloc>(context);
         final panelController = state.panelController;
-        return SlidingUpPanel(
-          color: Theme.of(context).cardColor,
-          onPanelSlide: (value) {
-            bloc.add(MusinPlayerPanelOffsetUpdatd(value));
-          },
-          minHeight: minHeight,
-          controller: panelController,
-          maxHeight: MediaQuery.of(context).size.height,
-          collapsed: SizedBox(
-            height: minHeight,
-            width: MediaQuery.of(context).size.width,
-            child: bottomPlayerWidget(),
+        return Scaffold(
+          body: SlidingUpPanel(
+            color: Theme.of(context).cardColor,
+            onPanelSlide: (value) {
+              bloc.add(MusinPlayerPanelOffsetUpdatd(value));
+            },
+            minHeight: minHeight,
+            controller: panelController,
+            onPanelClosed: () {
+              bloc.add(MusicPlayerStopped());
+            },
+            maxHeight: MediaQuery.of(context).size.height,
+            collapsed: SizedBox(
+              height: minHeight,
+              width: MediaQuery.of(context).size.width,
+              child: const MiniPlayerView(),
+            ),
+            panel: Opacity(
+              opacity: state.panelOffset,
+              child: const PlayerView(),
+            ),
+            body: body,
           ),
-          panel: Opacity(
-            opacity: state.panelOffset,
-            child: playerWidget(),
+          bottomNavigationBar: Opacity(
+            opacity: 1 - state.panelOffset,
+            child: AnimatedContainer(
+              duration: Duration.zero,
+              height: (1 - state.panelOffset) * kBottomNavigationBarHeight,
+              child: SingleChildScrollView(
+                padding: EdgeInsets.zero,
+                child: bottom,
+              ),
+            ),
           ),
-          body: body,
         );
       },
     );

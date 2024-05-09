@@ -57,27 +57,26 @@ class _HomeViewState extends State<HomeView> {
                 );
               },
             ),
-          ),
-          // bottomSheet: const BottomPlayerView(),
-          bottomNavigationBar: BottomNavigationBar(
-            currentIndex: state.bottomIndex,
-            onTap: (index) {
-              bloc.add(HomeBottomIndexUpdated(index));
-              BlocProvider.of<MusicPlayerBloc>(context)
-                  .state
-                  .panelController
-                  .close();
-            },
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: "Home",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.list),
-                label: "PlayList",
-              )
-            ],
+            bottom: BottomNavigationBar(
+              currentIndex: state.bottomIndex,
+              onTap: (index) {
+                bloc.add(HomeBottomIndexUpdated(index));
+                BlocProvider.of<MusicPlayerBloc>(context)
+                    .state
+                    .panelController
+                    .close();
+              },
+              items: const [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  label: "Home",
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.list),
+                  label: "PlayList",
+                )
+              ],
+            ),
           ),
         );
       },
