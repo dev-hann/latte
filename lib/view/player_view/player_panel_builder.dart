@@ -31,9 +31,6 @@ class PlayerPanelBuilder extends StatelessWidget {
             },
             minHeight: minHeight,
             controller: panelController,
-            onPanelClosed: () {
-              bloc.add(MusicPlayerStopped());
-            },
             maxHeight: MediaQuery.of(context).size.height,
             collapsed: SizedBox(
               height: minHeight,
