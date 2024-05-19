@@ -13,6 +13,7 @@ dependencies:
   bloc:
   rxdart:
   equatable:
+  dio:
 
   youtube_explode_dart: ^2.1.0
   cupertino_icons: ^1.0.6

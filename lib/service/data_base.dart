@@ -2,12 +2,13 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:latte/model/duration.g.dart';
 import 'package:latte/model/play_list.dart';
 import 'package:latte/model/player_setting.dart';
+import 'package:latte/model/search_suggestion.dart';
 import 'package:latte/model/song.dart';
 
 class DataBase<T> {
   DataBase(this.name);
   final String name;
-  late Box _box;
+  late Box<T> _box;
 
   Future openBox() async {
     _box = await Hive.openBox<T>(name);
@@ -35,5 +36,6 @@ class DataBase<T> {
     Hive.registerAdapter(PlayListAdapter());
     Hive.registerAdapter(DurationAdapter());
     Hive.registerAdapter(PlayerSettingAdapter());
+    Hive.registerAdapter(SearchSuggesntionAdapter());
   }
 }

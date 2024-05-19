@@ -1,32 +1,35 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'player_setting.dart';
+part of 'search_suggestion.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class PlayerSettingAdapter extends TypeAdapter<PlayerSetting> {
+class SearchSuggesntionAdapter extends TypeAdapter<SearchSuggesntion> {
   @override
-  final int typeId = 4;
+  final int typeId = 5;
 
   @override
-  PlayerSetting read(BinaryReader reader) {
+  SearchSuggesntion read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return PlayerSetting(
-      loopMode: fields[0] as LoopMode,
+    return SearchSuggesntion(
+      query: fields[0] as String,
+      type: SearchSuggestionType.values.toList()[fields[1]],
     );
   }
 
   @override
-  void write(BinaryWriter writer, PlayerSetting obj) {
+  void write(BinaryWriter writer, SearchSuggesntion obj) {
     writer
-      ..writeByte(1)
+      ..writeByte(2)
       ..writeByte(0)
-      ..write(obj.loopMode);
+      ..write(obj.query)
+      ..writeByte(1)
+      ..write(obj.type.index);
   }
 
   @override
@@ -35,7 +38,7 @@ class PlayerSettingAdapter extends TypeAdapter<PlayerSetting> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is PlayerSettingAdapter &&
+      other is SearchSuggesntionAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

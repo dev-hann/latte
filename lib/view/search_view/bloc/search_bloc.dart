@@ -5,8 +5,11 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:latte/enum/search_suggestion_type.dart';
+import 'package:latte/model/search_suggestion.dart';
 import 'package:latte/model/song.dart';
 import 'package:latte/service/search_service.dart';
+import 'package:latte/util/debouncer.dart';
 
 part 'search_event.dart';
 part 'search_state.dart';
@@ -21,16 +24,18 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     on<SearchInited>(_onInited);
     on<SearchTextFieldFocused>(_onTextFieldFocused);
     on<SearchQueried>(_onQuery);
+    on<SearchQuertyChanged>(_onQueryChanged);
+    on<SearchSuggestionListChanged>(_onSuggestionListUpdated);
   }
   final service = SearchService();
 
   FutureOr<void> _onInited(
       SearchInited event, Emitter<SearchState> emit) async {
     await service.init();
-    final historyList = service.loadSearchedList();
+    final historyList = service.loadSearchHistoryList();
     emit(
       state.copyWith(
-        searchHistoryList: historyList,
+        searchSuggestionList: historyList,
       ),
     );
     return emit.onEach(
@@ -38,7 +43,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       onData: (searchedList) {
         emit(
           state.copyWith(
-            searchHistoryList: searchedList,
+            searchSuggestionList: searchedList,
           ),
         );
       },
@@ -53,13 +58,19 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       ),
     );
     final query = state.queryController.text;
-    final searchList = await service.search(query);
-    final searchHistoryList = [...state.searchHistoryList];
-    if (!searchHistoryList.contains(query)) {
-      searchHistoryList.insert(0, query);
+    final searchHistoryList = [...service.loadSearchHistoryList()];
+    if (!searchHistoryList.map((e) => e.query).contains(query)) {
+      searchHistoryList.insert(
+        0,
+        SearchSuggesntion(
+          type: SearchSuggestionType.history,
+          query: query,
+        ),
+      );
       service.updateSearchHistoryList(searchHistoryList);
     }
 
+    final searchList = await service.search(query);
     final songList = searchList.map((item) {
       return Song(
         title: item.title,
@@ -80,6 +91,49 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       SearchTextFieldFocused event, Emitter<SearchState> emit) {
     emit(
       state.copyWith(isFocused: true),
+    );
+  }
+
+  FutureOr<void> _onQueryChanged(
+      SearchQuertyChanged event, Emitter<SearchState> emit) async {
+    final query = event.value;
+    if (query.isEmpty) {
+      final list = service.loadSearchHistoryList();
+      add(
+        SearchSuggestionListChanged(list),
+      );
+      return;
+    }
+    final debouncer = state.queryDebouncer ??
+        Debouncer<String>(
+          duration: const Duration(milliseconds: 500),
+          onValue: (value) async {
+            if (value != null) {
+              final list = await service.searchSuggestionList(value);
+              add(
+                SearchSuggestionListChanged(list),
+              );
+            }
+          },
+        );
+
+    debouncer.value = event.value;
+    if (state.queryDebouncer == null) {
+      emit(
+        state.copyWith(
+          queryDebouncer: debouncer,
+        ),
+      );
+    }
+  }
+
+  FutureOr<void> _onSuggestionListUpdated(
+      SearchSuggestionListChanged event, Emitter<SearchState> emit) {
+    emit(
+      state.copyWith(
+        searchSuggestionList: event.value,
+        isFocused: true,
+      ),
     );
   }
 }

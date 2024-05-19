@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:latte/enum/page_type.dart';
+import 'package:latte/enum/search_suggestion_type.dart';
+import 'package:latte/model/search_suggestion.dart';
 import 'package:latte/model/song.dart';
 import 'package:latte/view/home_view/bloc/home_bloc.dart';
 import 'package:latte/view/play_list_view/bloc/play_list_bloc.dart';
@@ -23,7 +25,9 @@ class _SearchViewState extends State<SearchView> {
   Widget searchTextField({
     required TextEditingController controller,
     required VoidCallback onTap,
+    required Function(String value) onchanged,
     required VoidCallback onSeachTap,
+    required VoidCallback onClearTap,
   }) {
     return TextField(
       autofocus: true,
@@ -33,26 +37,35 @@ class _SearchViewState extends State<SearchView> {
       onSubmitted: (_) {
         onSeachTap();
       },
+      decoration: InputDecoration(
+        suffixIcon: IconButton(
+          onPressed: onClearTap,
+          icon: const Icon(Icons.clear),
+        ),
+      ),
+      onChanged: onchanged,
     );
   }
 
-  Widget searchHistoryView({
-    required List<String> searchHistoryList,
-    required Function(String query) onSearchTap,
+  Widget searchSuggestionView({
+    required List<SearchSuggesntion> searchSuggestionList,
+    required Function(SearchSuggesntion query) onSearchTap,
   }) {
     return ListView.builder(
       padding: const EdgeInsets.only(
         bottom: kToolbarHeight * 2,
       ),
-      itemCount: searchHistoryList.length,
+      itemCount: searchSuggestionList.length,
       itemBuilder: (_, index) {
-        final query = searchHistoryList[index];
+        final suggestion = searchSuggestionList[index];
         return ListTile(
           onTap: () {
-            onSearchTap(query);
+            onSearchTap(suggestion);
           },
-          leading: const Icon(Icons.history),
-          title: Text(query),
+          leading: suggestion.type == SearchSuggestionType.history
+              ? const Icon(Icons.history)
+              : const SizedBox(),
+          title: Text(suggestion.query),
         );
       },
     );
@@ -115,6 +128,17 @@ class _SearchViewState extends State<SearchView> {
                     SearchQueried(),
                   );
                 },
+                onClearTap: () {
+                  state.queryController.clear();
+                  searchBloc.add(
+                    const SearchQuertyChanged(""),
+                  );
+                },
+                onchanged: (value) {
+                  searchBloc.add(
+                    SearchQuertyChanged(value),
+                  );
+                },
               ),
               actions: [
                 IconButton(
@@ -140,10 +164,10 @@ class _SearchViewState extends State<SearchView> {
                   }
 
                   if (state.isFocused) {
-                    return searchHistoryView(
-                      searchHistoryList: state.searchHistoryList,
-                      onSearchTap: (query) {
-                        state.queryController.text = query;
+                    return searchSuggestionView(
+                      searchSuggestionList: state.searchSuggestionList,
+                      onSearchTap: (suggestion) {
+                        state.queryController.text = suggestion.query;
                         searchBloc.add(
                           SearchQueried(),
                         );
