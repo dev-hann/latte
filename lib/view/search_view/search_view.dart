@@ -103,6 +103,7 @@ class _SearchViewState extends State<SearchView> {
         final searchBloc = BlocProvider.of<SearchBloc>(context);
         final songBloc = BlocProvider.of<MusicPlayerBloc>(context);
         final resultList = state.resultList;
+
         return GestureDetector(
           onTap: () {
             FocusManager.instance.primaryFocus?.unfocus();
@@ -124,6 +125,7 @@ class _SearchViewState extends State<SearchView> {
                   searchBloc.add(SearchTextFieldFocused());
                 },
                 onSeachTap: () {
+                  FocusManager.instance.primaryFocus?.unfocus();
                   searchBloc.add(
                     SearchQueried(),
                   );
@@ -143,6 +145,7 @@ class _SearchViewState extends State<SearchView> {
               actions: [
                 IconButton(
                   onPressed: () {
+                    FocusManager.instance.primaryFocus?.unfocus();
                     searchBloc.add(
                       SearchQueried(),
                     );
@@ -157,30 +160,33 @@ class _SearchViewState extends State<SearchView> {
               ),
               child: Builder(
                 builder: (context) {
-                  if (state.isSearching) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-
-                  if (state.isFocused) {
-                    return searchSuggestionView(
-                      searchSuggestionList: state.searchSuggestionList,
-                      onSearchTap: (suggestion) {
-                        state.queryController.text = suggestion.query;
-                        searchBloc.add(
-                          SearchQueried(),
+                  switch (state.type) {
+                    case SearchStateType.init:
+                      return const SizedBox();
+                    case SearchStateType.searching:
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    case SearchStateType.done:
+                      if (state.isFocused) {
+                        return searchSuggestionView(
+                          searchSuggestionList: state.searchSuggestionList,
+                          onSearchTap: (suggestion) {
+                            state.queryController.text = suggestion.query;
+                            searchBloc.add(
+                              SearchQueried(),
+                            );
+                          },
                         );
-                      },
-                    );
+                      }
+                      return searchResultView(
+                        resultList: resultList,
+                        onSongTap: (Song song) {
+                          listBloc.add(PlayListSongAdded(song));
+                          songBloc.add(MusicPlayerPlayed(song));
+                        },
+                      );
                   }
-                  return searchResultView(
-                    resultList: resultList,
-                    onSongTap: (Song song) {
-                      listBloc.add(PlayListSongAdded(song));
-                      songBloc.add(MusicPlayerPlayed(song));
-                    },
-                  );
                 },
               ),
             ),

@@ -32,10 +32,10 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   FutureOr<void> _onInited(
       SearchInited event, Emitter<SearchState> emit) async {
     await service.init();
-    final historyList = service.loadSearchHistoryList();
     emit(
       state.copyWith(
-        searchSuggestionList: historyList,
+        type: SearchStateType.done,
+        searchSuggestionList: service.loadSearchHistoryList(),
       ),
     );
     return emit.onEach(
@@ -54,7 +54,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       SearchQueried event, Emitter<SearchState> emit) async {
     emit(
       state.copyWith(
-        isSearching: true,
+        type: SearchStateType.searching,
       ),
     );
     final query = state.queryController.text;
@@ -80,7 +80,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     }).toList();
     emit(
       state.copyWith(
-        isSearching: false,
+        type: SearchStateType.done,
         resultList: songList,
         isFocused: false,
       ),

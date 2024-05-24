@@ -9,42 +9,42 @@ enum SearchStateType {
 
 class SearchState extends Equatable {
   const SearchState({
+    this.type = SearchStateType.init,
     required this.queryController,
     this.isFocused = true,
     this.resultList = const [],
-    this.isSearching = false,
     this.searchSuggestionList = const [],
     this.queryDebouncer,
   });
+  final SearchStateType type;
   final TextEditingController queryController;
   final bool isFocused;
   final List<Song> resultList;
-  final bool isSearching;
   final List<SearchSuggesntion> searchSuggestionList;
   final Debouncer<String>? queryDebouncer;
 
   @override
   List<Object?> get props => [
+        type,
         resultList,
-        isSearching,
         searchSuggestionList,
         isFocused,
         queryDebouncer,
       ];
 
   SearchState copyWith({
+    SearchStateType? type,
     TextEditingController? queryController,
     bool? isFocused,
     List<Song>? resultList,
-    bool? isSearching,
     List<SearchSuggesntion>? searchSuggestionList,
     Debouncer<String>? queryDebouncer,
   }) {
     return SearchState(
+      type: type ?? this.type,
       queryController: queryController ?? this.queryController,
       isFocused: isFocused ?? this.isFocused,
       resultList: resultList ?? this.resultList,
-      isSearching: isSearching ?? this.isSearching,
       searchSuggestionList: searchSuggestionList ?? this.searchSuggestionList,
       queryDebouncer: queryDebouncer ?? this.queryDebouncer,
     );

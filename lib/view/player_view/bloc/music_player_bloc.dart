@@ -80,9 +80,6 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
       }
       return;
     }
-    // if (songList.isEmpty) {
-    //   await state.panelController.show();
-    // }
 
     if (!songList.contains(song)) {
       final newSongList = [...songList, song];
