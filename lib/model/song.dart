@@ -22,7 +22,7 @@ class Song extends Equatable {
   Future<String?> get audioURL async {
     final manifest =
         await YoutubeExplode().videos.streamsClient.getManifest(youtubeID);
-    final list = manifest.audioOnly;
+    final list = manifest.audio;
     if (list.isEmpty) {
       return null;
     }
