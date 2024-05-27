@@ -106,7 +106,7 @@ class _SearchViewState extends State<SearchView> {
 
         return GestureDetector(
           onTap: () {
-            FocusManager.instance.primaryFocus?.unfocus();
+            primaryFocus?.unfocus();
           },
           child: Scaffold(
             appBar: AppBar(
@@ -125,7 +125,7 @@ class _SearchViewState extends State<SearchView> {
                   searchBloc.add(SearchTextFieldFocused());
                 },
                 onSeachTap: () {
-                  FocusManager.instance.primaryFocus?.unfocus();
+                  primaryFocus?.unfocus();
                   searchBloc.add(
                     SearchQueried(),
                   );
@@ -145,7 +145,7 @@ class _SearchViewState extends State<SearchView> {
               actions: [
                 IconButton(
                   onPressed: () {
-                    FocusManager.instance.primaryFocus?.unfocus();
+                    primaryFocus?.unfocus();
                     searchBloc.add(
                       SearchQueried(),
                     );
@@ -172,6 +172,7 @@ class _SearchViewState extends State<SearchView> {
                         return searchSuggestionView(
                           searchSuggestionList: state.searchSuggestionList,
                           onSearchTap: (suggestion) {
+                            primaryFocus?.unfocus();
                             state.queryController.text = suggestion.query;
                             searchBloc.add(
                               SearchQueried(),
@@ -181,7 +182,7 @@ class _SearchViewState extends State<SearchView> {
                       }
                       return searchResultView(
                         resultList: resultList,
-                        onSongTap: (Song song) {
+                        onSongTap: (song) {
                           listBloc.add(PlayListSongAdded(song));
                           songBloc.add(MusicPlayerPlayed(song));
                         },

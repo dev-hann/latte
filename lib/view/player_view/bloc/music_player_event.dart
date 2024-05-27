@@ -9,6 +9,13 @@ abstract class MusicPlayerEvent extends Equatable {
 
 class MusicPlayerInited extends MusicPlayerEvent {}
 
+class MusicPlayerSongListUpdated extends MusicPlayerEvent {
+  const MusicPlayerSongListUpdated(this.playList);
+  final PlayList playList;
+  @override
+  List<Object> get props => [playList];
+}
+
 class MusicPlayerPlayed extends MusicPlayerEvent {
   const MusicPlayerPlayed([this.song]);
   final Song? song;

@@ -32,6 +32,7 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
     on<MusicPlayerStopped>(_onStopped);
     on<MusinPlayerPanelOffsetUpdatd>(_onPenelOffsetUpdated);
     on<MusicPlayerSettingUpdated>(_onSettingUpdated);
+    on<MusicPlayerSongListUpdated>(_onSongListUpdated);
   }
   final service = AudioService();
 
@@ -91,7 +92,7 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
         ),
       );
     }
-    final isOK = await service.setAudio(song);
+    final isOK = await service.setAudioList(state.playList.songList);
     if (isOK) {
       emit(
         state.copyWith(
@@ -150,5 +151,11 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
   FutureOr<void> _onSeeked(
       MusicPlayerSeeked event, Emitter<MusicPlayerState> emit) {
     return service.seek(event.position);
+  }
+
+  FutureOr<void> _onSongListUpdated(
+      MusicPlayerSongListUpdated event, Emitter<MusicPlayerState> emit) async {
+    await service.setAudioList(event.playList.songList);
+    service.play();
   }
 }

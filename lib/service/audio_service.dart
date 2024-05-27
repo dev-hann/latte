@@ -34,6 +34,33 @@ class AudioService {
     return audio.play();
   }
 
+  Future<bool> setAudioList(List<Song> songList) async {
+    try {
+      final List<UriAudioSource> list = [];
+      for (final song in songList) {
+        final url = await song.audioURL;
+        if (url != null) {
+          final source = AudioSource.uri(
+            Uri.parse(url),
+            tag: MediaItem(
+              id: song.youtubeID,
+              title: song.title,
+              artUri: Uri.parse(song.thumbnail),
+            ),
+          );
+          list.add(source);
+        }
+      }
+      final source = ConcatenatingAudioSource(
+        children: list,
+      );
+      audio.setAudioSource(source);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   Future<bool> setAudio(Song song) async {
     final audioURL = await song.audioURL;
     if (audioURL != null) {
