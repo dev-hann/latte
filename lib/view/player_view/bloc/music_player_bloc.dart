@@ -92,7 +92,8 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
         ),
       );
     }
-    final isOK = await service.setAudioList(state.playList.songList);
+    // final isOK = await service.setAudioList(state.playList.songList);
+    final isOK = await service.setAudio(song);
     if (isOK) {
       emit(
         state.copyWith(
