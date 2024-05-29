@@ -183,8 +183,16 @@ class _SearchViewState extends State<SearchView> {
                       return searchResultView(
                         resultList: resultList,
                         onSongTap: (song) {
+                          // TODO: add search result song, and play song list not synced.
                           listBloc.add(PlayListSongAdded(song));
-                          songBloc.add(MusicPlayerPlayed(song));
+                          final list = listBloc.state.playList;
+                          print(list);
+                          songBloc.add(
+                            MusicPlayerSongListUpdated(
+                              list,
+                              inintIndex: list.songList.length - 1,
+                            ),
+                          );
                         },
                       );
                   }

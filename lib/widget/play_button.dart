@@ -28,7 +28,7 @@ class PlayButton extends StatelessWidget {
             if (isPlaying) {
               bloc.add(MusicPlayerPaused());
             } else {
-              bloc.add(const MusicPlayerPlayed());
+              bloc.add(MusicPlayerPlayed(bloc.state.currentSong!));
             }
           },
           icon: Builder(

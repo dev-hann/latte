@@ -7,7 +7,10 @@ import 'package:latte/service/data_base.dart';
 class AudioService {
   final settingBox = DataBase<PlayerSetting>("PlayerSettingBox");
   final settingKey = "PlayerSettingKey";
-  final audio = AudioPlayer();
+  AudioPlayer audio = AudioPlayer();
+  final _playList = ConcatenatingAudioSource(
+    children: [],
+  );
 
   Stream<PlayerState> get playerStateStream {
     return audio.playerStateStream;
@@ -21,6 +24,10 @@ class AudioService {
     return audio.bufferedPositionStream;
   }
 
+  Stream<int?> get currentIndexStream {
+    return audio.currentIndexStream;
+  }
+
   Future init() async {
     await JustAudioBackground.init(
       androidNotificationChannelId: 'com.hann.latte.audio',
@@ -30,12 +37,18 @@ class AudioService {
     await settingBox.openBox();
   }
 
-  Future play() {
+  Future play({int index = 0}) async {
+    await audio.setAudioSource(
+      _playList,
+      initialIndex: index,
+      preload: false,
+    );
     return audio.play();
   }
 
   Future<bool> setAudioList(List<Song> songList) async {
     try {
+      await _playList.clear();
       final List<UriAudioSource> list = [];
       for (final song in songList) {
         final url = await song.audioURL;
@@ -46,36 +59,17 @@ class AudioService {
               id: song.youtubeID,
               title: song.title,
               artUri: Uri.parse(song.thumbnail),
+              duration: song.duration,
             ),
           );
           list.add(source);
         }
       }
-      final source = ConcatenatingAudioSource(
-        children: list,
-      );
-      audio.setAudioSource(source);
+      _playList.addAll(list);
       return true;
     } catch (e) {
       return false;
     }
-  }
-
-  Future<bool> setAudio(Song song) async {
-    final audioURL = await song.audioURL;
-    if (audioURL != null) {
-      final source = AudioSource.uri(
-        Uri.parse(audioURL),
-        tag: MediaItem(
-          id: song.youtubeID,
-          title: song.title,
-          artUri: Uri.parse(song.thumbnail),
-        ),
-      );
-      await audio.setAudioSource(source);
-      return true;
-    }
-    return false;
   }
 
   Future stop() {

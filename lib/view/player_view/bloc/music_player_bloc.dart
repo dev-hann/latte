@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 import 'package:latte/model/play_list.dart';
 import 'package:latte/model/player_setting.dart';
 import 'package:latte/model/song.dart';
@@ -40,16 +41,22 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
       MusicPlayerInited event, Emitter<MusicPlayerState> emit) async {
     await service.init();
     add(MusicPlayerSettingInited());
-    final audioStream =
-        Rx.combineLatest3<PlayerState, Duration, Duration, MusicPlayerState>(
+    final audioStream = Rx.combineLatest4<PlayerState, Duration, Duration, int?,
+        MusicPlayerState>(
       service.playerStateStream,
       service.positionStream,
       service.bufferedPostionStream,
-      (playerState, position, bufferedPosiotion) {
+      service.currentIndexStream,
+      (playerState, position, bufferedPosiotion, index) {
+        Song? song;
+        if (index != null && index != -1) {
+          song = state.playList.songList[index];
+        }
         return state.copyWith(
           playerState: playerState,
           currentDuration: position,
           bufferedDuration: bufferedPosiotion,
+          currentSong: song,
         );
       },
     );
@@ -66,41 +73,15 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
 
   FutureOr<void> _onPlayed(
       MusicPlayerPlayed event, Emitter<MusicPlayerState> emit) async {
-    final playList = state.playList;
-    final songList = playList.songList;
-    final song = event.song;
-
     final panelController = state.panelController;
     if (!panelController.isPanelShown) {
       await panelController.show();
     }
-
-    if (song == null) {
-      if (state.playerState.processingState == ProcessingState.ready) {
-        service.play();
-      }
-      return;
-    }
-
-    if (!songList.contains(song)) {
-      final newSongList = [...songList, song];
-      emit(
-        state.copyWith(
-          playList: playList.copyWith(
-            songList: newSongList,
-          ),
-        ),
-      );
-    }
-    // final isOK = await service.setAudioList(state.playList.songList);
-    final isOK = await service.setAudio(song);
-    if (isOK) {
-      emit(
-        state.copyWith(
-          currentSong: song,
-        ),
-      );
-      service.play();
+    final index = state.playList.songList.indexWhere((song) {
+      return song == event.song;
+    });
+    if (index != -1) {
+      service.play(index: index);
     }
   }
 
@@ -156,7 +137,20 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
 
   FutureOr<void> _onSongListUpdated(
       MusicPlayerSongListUpdated event, Emitter<MusicPlayerState> emit) async {
-    await service.setAudioList(event.playList.songList);
-    service.play();
+    final list = event.playList;
+    await service.setAudioList(
+      list.songList,
+    );
+    emit(
+      state.copyWith(
+        playList: list,
+      ),
+    );
+
+    final panelController = state.panelController;
+    if (!panelController.isPanelShown) {
+      await panelController.show();
+    }
+    service.play(index: event.inintIndex);
   }
 }

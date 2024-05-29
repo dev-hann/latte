@@ -26,7 +26,7 @@ class PlayListView extends StatelessWidget {
             ),
             itemCount: songList.length,
             itemBuilder: (_, index) {
-              final song = songList.reversed.toList()[index];
+              final song = songList.toList()[index];
               return Card(
                 clipBehavior: Clip.hardEdge,
                 child: Slidable(
@@ -61,8 +61,22 @@ class PlayListView extends StatelessWidget {
                     ],
                   ),
                   child: ListTile(
-                    onTap: () {
-                      songBloc.add(MusicPlayerPlayed(song));
+                    onTap: () async {
+                      final index = playList.songList.indexWhere((e) {
+                        return e == song;
+                      });
+                      if (index != -1) {
+                        songBloc.add(
+                          MusicPlayerSongListUpdated(
+                            playList,
+                            inintIndex: index,
+                          ),
+                        );
+                      }
+
+                      // songBloc.add(
+                      //   MusicPlayerPlayed(song),
+                      // );
                     },
                     title: Text(song.title),
                     subtitle: Text(
