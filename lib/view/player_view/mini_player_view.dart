@@ -82,11 +82,10 @@ class MiniPlayerView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<MusicPlayerBloc, MusicPlayerState>(
       buildWhen: (previous, current) {
-        return previous.playList != current.playList;
+        return previous.sequenceState != current.sequenceState;
       },
       builder: (context, state) {
-        final playList = state.playList;
-        final songList = playList.songList;
+        final songList = state.songList;
         final panelController = state.panelController;
         if (songList.isEmpty) {
           return const SizedBox();

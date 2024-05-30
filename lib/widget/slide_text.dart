@@ -42,6 +42,12 @@ class _SlideTextState extends State<SlideText> with TickerProviderStateMixin {
     scrollController.dispose();
   }
 
+  @override
+  void dispose() {
+    disposeController();
+    super.dispose();
+  }
+
   void initController() {
     count = 1;
     textMaxWidth = computeTextWidth();

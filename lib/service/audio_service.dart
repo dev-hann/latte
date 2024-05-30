@@ -24,8 +24,8 @@ class AudioService {
     return audio.bufferedPositionStream;
   }
 
-  Stream<int?> get currentIndexStream {
-    return audio.currentIndexStream;
+  Stream<SequenceState?> get sequenceStateStream {
+    return audio.sequenceStateStream;
   }
 
   Future init() async {

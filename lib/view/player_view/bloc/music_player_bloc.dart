@@ -18,9 +18,6 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
   MusicPlayerBloc()
       : super(
           MusicPlayerState(
-            playList: const PlayList(
-              title: 'Default List',
-            ),
             playerState: PlayerState(false, ProcessingState.idle),
             panelController: PanelController(),
           ),
@@ -41,22 +38,18 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
       MusicPlayerInited event, Emitter<MusicPlayerState> emit) async {
     await service.init();
     add(MusicPlayerSettingInited());
-    final audioStream = Rx.combineLatest4<PlayerState, Duration, Duration, int?,
-        MusicPlayerState>(
+    final audioStream = Rx.combineLatest4<PlayerState, Duration, Duration,
+        SequenceState?, MusicPlayerState>(
       service.playerStateStream,
       service.positionStream,
       service.bufferedPostionStream,
-      service.currentIndexStream,
-      (playerState, position, bufferedPosiotion, index) {
-        Song? song;
-        if (index != null && index != -1) {
-          song = state.playList.songList[index];
-        }
+      service.sequenceStateStream,
+      (playerState, position, bufferedPosiotion, sequenceState) {
         return state.copyWith(
           playerState: playerState,
           currentDuration: position,
           bufferedDuration: bufferedPosiotion,
-          currentSong: song,
+          sequenceState: sequenceState,
         );
       },
     );
@@ -77,7 +70,7 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
     if (!panelController.isPanelShown) {
       await panelController.show();
     }
-    final index = state.playList.songList.indexWhere((song) {
+    final index = state.songList.indexWhere((song) {
       return song == event.song;
     });
     if (index != -1) {
@@ -140,11 +133,6 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
     final list = event.playList;
     await service.setAudioList(
       list.songList,
-    );
-    emit(
-      state.copyWith(
-        playList: list,
-      ),
     );
 
     final panelController = state.panelController;
