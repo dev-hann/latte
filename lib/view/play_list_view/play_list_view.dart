@@ -62,21 +62,9 @@ class PlayListView extends StatelessWidget {
                   ),
                   child: ListTile(
                     onTap: () async {
-                      final index = playList.songList.indexWhere((e) {
-                        return e == song;
-                      });
-                      if (index != -1) {
-                        songBloc.add(
-                          MusicPlayerSongListUpdated(
-                            playList,
-                            inintIndex: index,
-                          ),
-                        );
-                      }
-
-                      // songBloc.add(
-                      //   MusicPlayerPlayed(song),
-                      // );
+                      songBloc.add(
+                        MusicPlayerPlayed(song),
+                      );
                     },
                     title: Text(song.title),
                     subtitle: Text(

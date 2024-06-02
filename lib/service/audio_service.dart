@@ -34,42 +34,48 @@ class AudioService {
       androidNotificationChannelName: 'audio channel',
       androidNotificationOngoing: true,
     );
+    await audio.setAudioSource(_playList);
     await settingBox.openBox();
   }
 
-  Future play({int index = 0}) async {
-    await audio.setAudioSource(
-      _playList,
-      initialIndex: index,
-      preload: false,
-    );
+  Future play() async {
     return audio.play();
   }
 
   Future<bool> setAudioList(List<Song> songList) async {
     try {
       await _playList.clear();
-      final List<UriAudioSource> list = [];
-      for (final song in songList) {
-        final url = await song.audioURL;
-        if (url != null) {
-          final source = AudioSource.uri(
-            Uri.parse(url),
-            tag: MediaItem(
-              id: song.youtubeID,
-              title: song.title,
-              artUri: Uri.parse(song.thumbnail),
-              duration: song.duration,
-            ),
-          );
-          list.add(source);
+      for (int index = 0; index < songList.length; index++) {
+        final song = songList[index];
+        if (index == 0) {
+          await setAudio(song);
+        } else {
+          setAudio(song);
         }
       }
-      _playList.addAll(list);
+
       return true;
     } catch (e) {
       return false;
     }
+  }
+
+  Future<int> setAudio(Song song) async {
+    final url = await song.audioURL;
+    if (url != null) {
+      final source = AudioSource.uri(
+        Uri.parse(url),
+        tag: MediaItem(
+          id: song.youtubeID,
+          title: song.title,
+          artUri: Uri.parse(song.thumbnail),
+          duration: song.duration,
+        ),
+      );
+      await _playList.add(source);
+      return _playList.length - 1;
+    }
+    return -1;
   }
 
   Future stop() {
@@ -80,8 +86,11 @@ class AudioService {
     return audio.pause();
   }
 
-  Future seek(Duration position) {
-    return audio.seek(position);
+  Future seek(Duration position, {int? index}) {
+    return audio.seek(
+      position,
+      index: index,
+    );
   }
 
   Stream<PlayerSetting?> get playerSettingStream {

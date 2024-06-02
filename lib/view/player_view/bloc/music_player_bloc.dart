@@ -70,12 +70,19 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
     if (!panelController.isPanelShown) {
       await panelController.show();
     }
-    final index = state.songList.indexWhere((song) {
-      return song == event.song;
-    });
-    if (index != -1) {
-      service.play(index: index);
+    final song = event.song;
+    if (state.currentSong == song) {
+      return;
     }
+    final songList = state.songList;
+    int index = songList.indexWhere((e) {
+      return e == song;
+    });
+    if (index == -1) {
+      index = await service.setAudio(song);
+    }
+    await service.seek(Duration.zero, index: index);
+    await service.play();
   }
 
   FutureOr<void> _onStopped(
@@ -130,15 +137,13 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
 
   FutureOr<void> _onSongListUpdated(
       MusicPlayerSongListUpdated event, Emitter<MusicPlayerState> emit) async {
-    final list = event.playList;
-    await service.setAudioList(
-      list.songList,
-    );
-
     final panelController = state.panelController;
     if (!panelController.isPanelShown) {
       await panelController.show();
     }
-    service.play(index: event.inintIndex);
+    final list = event.playList;
+    await service.setAudioList(
+      list.songList,
+    );
   }
 }
