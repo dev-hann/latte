@@ -83,6 +83,7 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
     }
     await service.seek(Duration.zero, index: index);
     await service.play();
+    await service.setLoopMode(state.sequenceState?.loopMode ?? LoopMode.off);
   }
 
   FutureOr<void> _onStopped(

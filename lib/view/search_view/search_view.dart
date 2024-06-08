@@ -54,7 +54,7 @@ class _SearchViewState extends State<SearchView> {
   }) {
     return ListView.builder(
       padding: const EdgeInsets.only(
-        bottom: kToolbarHeight * 2,
+        bottom: kToolbarHeight * 4,
       ),
       itemCount: searchSuggestionList.length,
       itemBuilder: (_, index) {
@@ -78,7 +78,7 @@ class _SearchViewState extends State<SearchView> {
   }) {
     return ListView.builder(
       padding: const EdgeInsets.only(
-        bottom: kToolbarHeight * 2,
+        bottom: kToolbarHeight * 4,
       ),
       itemCount: resultList.length,
       itemBuilder: (_, index) {

@@ -42,6 +42,10 @@ class AudioService {
     return audio.play();
   }
 
+  Future setLoopMode(LoopMode mode) {
+    return audio.setLoopMode(mode);
+  }
+
   Future<bool> setAudioList(List<Song> songList) async {
     try {
       await _playList.clear();

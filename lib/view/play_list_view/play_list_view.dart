@@ -22,11 +22,11 @@ class PlayListView extends StatelessWidget {
           ),
           child: ListView.builder(
             padding: const EdgeInsets.only(
-              bottom: kToolbarHeight * 1.5,
+              bottom: kTextTabBarHeight * 4,
             ),
             itemCount: songList.length,
             itemBuilder: (_, index) {
-              final song = songList.toList()[index];
+              final song = songList.reversed.toList()[index];
               return Card(
                 clipBehavior: Clip.hardEdge,
                 child: Slidable(
