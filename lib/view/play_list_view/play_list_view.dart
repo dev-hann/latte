@@ -4,6 +4,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:latte/util/time_format.dart';
 import 'package:latte/view/play_list_view/bloc/play_list_bloc.dart';
 import 'package:latte/view/player_view/bloc/music_player_bloc.dart';
+import 'package:latte/widget/slide_text.dart';
 
 class PlayListView extends StatelessWidget {
   const PlayListView({super.key});
@@ -15,7 +16,6 @@ class PlayListView extends StatelessWidget {
         final playListbloc = BlocProvider.of<PlayListBloc>(context);
         final playList = state.playList;
         final songList = playList.songList;
-        final songBloc = BlocProvider.of<MusicPlayerBloc>(context);
         return Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: 16.0,
@@ -60,16 +60,31 @@ class PlayListView extends StatelessWidget {
                       ),
                     ],
                   ),
-                  child: ListTile(
-                    onTap: () async {
-                      songBloc.add(
-                        MusicPlayerPlayed(song),
+                  child: BlocBuilder<MusicPlayerBloc, MusicPlayerState>(
+                    buildWhen: (previous, current) {
+                      return previous.currentSong != current.currentSong;
+                    },
+                    builder: (context, state) {
+                      final songBloc =
+                          BlocProvider.of<MusicPlayerBloc>(context);
+                      final currentSong = state.currentSong;
+                      final isCurrent = currentSong == song;
+                      return ListTile(
+                        selected: isCurrent,
+                        onTap: () async {
+                          songBloc.add(
+                            MusicPlayerPlayed(song),
+                          );
+                        },
+                        title: SlideText(
+                          song.title,
+                          enable: isCurrent,
+                        ),
+                        subtitle: Text(
+                          TimeFormat.songDuration(song.duration),
+                        ),
                       );
                     },
-                    title: Text(song.title),
-                    subtitle: Text(
-                      TimeFormat.songDuration(song.duration),
-                    ),
                   ),
                 ),
               );

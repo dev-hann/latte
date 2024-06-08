@@ -5,9 +5,11 @@ class SlideText extends StatefulWidget {
     this.text, {
     super.key,
     this.style,
+    this.enable = true,
   });
   final String text;
   final TextStyle? style;
+  final bool enable;
 
   @override
   State<SlideText> createState() => _SlideTextState();
@@ -65,7 +67,9 @@ class _SlideTextState extends State<SlideText> with TickerProviderStateMixin {
         }
       }
     });
-    animationController.repeat();
+    if (widget.enable) {
+      animationController.repeat();
+    }
   }
 
   double computeTextWidth() {

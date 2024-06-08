@@ -8,6 +8,7 @@ import 'package:latte/view/home_view/bloc/home_bloc.dart';
 import 'package:latte/view/play_list_view/bloc/play_list_bloc.dart';
 import 'package:latte/view/search_view/bloc/search_bloc.dart';
 import 'package:latte/view/player_view/bloc/music_player_bloc.dart';
+import 'package:latte/widget/slide_text.dart';
 
 class SearchView extends StatefulWidget {
   const SearchView({super.key});
@@ -87,7 +88,7 @@ class _SearchViewState extends State<SearchView> {
             onTap: () {
               onSongTap(song);
             },
-            title: Text(song.title),
+            title: SlideText(song.title),
             subtitle: Text(song.duration.toString()),
           ),
         );
@@ -183,15 +184,11 @@ class _SearchViewState extends State<SearchView> {
                       return searchResultView(
                         resultList: resultList,
                         onSongTap: (song) {
-                          // TODO: add search result song, and play song list not synced.
-                          listBloc.add(PlayListSongAdded(song));
-                          final list = listBloc.state.playList;
-                          print(list);
+                          listBloc.add(
+                            PlayListSongAdded(song),
+                          );
                           songBloc.add(
-                            MusicPlayerSongListUpdated(
-                              list,
-                              inintIndex: list.songList.length - 1,
-                            ),
+                            MusicPlayerPlayed(song),
                           );
                         },
                       );

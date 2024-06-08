@@ -66,13 +66,13 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
 
   FutureOr<void> _onPlayed(
       MusicPlayerPlayed event, Emitter<MusicPlayerState> emit) async {
-    final panelController = state.panelController;
-    if (!panelController.isPanelShown) {
-      await panelController.show();
-    }
     final song = event.song;
     if (state.currentSong == song) {
       return;
+    }
+    final panelController = state.panelController;
+    if (!panelController.isPanelShown) {
+      await panelController.show();
     }
     final songList = state.songList;
     int index = songList.indexWhere((e) {

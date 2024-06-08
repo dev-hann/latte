@@ -24,7 +24,6 @@ dependencies:
   audio_video_progress_bar: ^2.0.2
 
   sliding_up_panel: ^2.0.0+1
-  # flutter_sliding_box: ^1.1.5
 
   hive_flutter:
   hive_generator: ^2.0.1
