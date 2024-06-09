@@ -45,6 +45,5 @@ flutter_launcher_icons:
   android: true
 flutter:
   assets:
-    - assets/token/token.json
     - shorebird.yaml
   uses-material-design: true

@@ -29,7 +29,7 @@ class DashboardView extends StatelessWidget {
             horizontal: 16.0,
           ),
           child: ListView(
-            padding: EdgeInsets.only(bottom: kTextTabBarHeight * 4),
+            padding: const EdgeInsets.only(bottom: kTextTabBarHeight * 4),
             children: [
               DashboardCarosel(
                 title: 'TOP100',
