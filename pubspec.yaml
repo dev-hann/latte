@@ -30,6 +30,7 @@ dependencies:
   flutter_slidable: ^3.1.0
 
   flutter_launcher_icons:
+  html: ^0.15.4
 
 dev_dependencies:
   flutter_test:
@@ -44,5 +45,6 @@ flutter_launcher_icons:
   android: true
 flutter:
   assets:
+    - assets/token/token.json
     - shorebird.yaml
   uses-material-design: true

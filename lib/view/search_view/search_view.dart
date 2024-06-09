@@ -18,11 +18,6 @@ class SearchView extends StatefulWidget {
 }
 
 class _SearchViewState extends State<SearchView> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
   Widget searchTextField({
     required TextEditingController controller,
     required VoidCallback onTap,

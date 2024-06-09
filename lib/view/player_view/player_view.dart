@@ -6,7 +6,6 @@ import 'package:just_audio/just_audio.dart';
 import 'package:latte/view/player_view/bloc/music_player_bloc.dart';
 import 'package:latte/widget/music_progress_widget.dart';
 import 'package:latte/widget/play_button.dart';
-import 'package:latte/widget/slide_text.dart';
 
 class PlayerView extends StatelessWidget {
   const PlayerView({

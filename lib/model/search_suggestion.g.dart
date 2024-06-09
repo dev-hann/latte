@@ -18,7 +18,7 @@ class SearchSuggesntionAdapter extends TypeAdapter<SearchSuggesntion> {
     };
     return SearchSuggesntion(
       query: fields[0] as String,
-      type: SearchSuggestionType.values.toList()[fields[1]],
+      type: SearchSuggestionType.values[fields[1]],
     );
   }
 
