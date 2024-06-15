@@ -30,7 +30,12 @@ dependencies:
   flutter_slidable: ^3.1.0
 
   flutter_launcher_icons:
-  html: ^0.15.4
+  melon:
+    git:
+      url: "https://github.com/dev-hann/melon.git"
+      ref: "main"
+
+  go_router:
 
 dev_dependencies:
   flutter_test:

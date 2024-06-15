@@ -12,6 +12,9 @@ import 'package:latte/widget/slide_text.dart';
 
 class SearchView extends StatefulWidget {
   const SearchView({super.key});
+  static String get route {
+    return "/search";
+  }
 
   @override
   State<SearchView> createState() => _SearchViewState();

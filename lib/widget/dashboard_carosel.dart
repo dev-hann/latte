@@ -1,59 +1,50 @@
 import 'package:flutter/material.dart';
-import 'package:latte/model/dashboard.dart';
 
-class DashboardCarosel extends StatelessWidget {
+class DashboardCarosel<T> extends StatelessWidget {
   const DashboardCarosel({
     super.key,
     required this.title,
+    this.action,
     required this.songList,
-    required this.onSongTap,
+    required this.itemBuilder,
+    this.height,
   });
   final String title;
-  final List<DashboardSong> songList;
-  final Function(DashboardSong song) onSongTap;
+  final Widget? action;
+  final List<T> songList;
+  final Widget Function(BuildContext context, T item) itemBuilder;
+  final double? height;
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final itemSize = width / 3;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: Theme.of(context).textTheme.headlineMedium,
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 16.0,
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  title,
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+              ),
+              action ?? const SizedBox(),
+            ],
+          ),
         ),
         SizedBox(
-          height: itemSize,
+          height: height ?? MediaQuery.of(context).size.width / 3,
           child: ListView(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+            ),
             scrollDirection: Axis.horizontal,
             children: songList.map((song) {
-              return GestureDetector(
-                onTap: () {
-                  onSongTap(song);
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8.0),
-                    clipBehavior: Clip.hardEdge,
-                    child: SizedBox.square(
-                      dimension: itemSize,
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: NetworkImage(song.imageURL),
-                          ),
-                        ),
-                        child: Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Text(song.song),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              );
+              return itemBuilder(context, song);
             }).toList(),
           ),
         ),

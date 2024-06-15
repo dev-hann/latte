@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:latte/enum/page_type.dart';
 import 'package:latte/view/dashboard_view/dashboard_view.dart';
 import 'package:latte/view/home_view/bloc/home_bloc.dart';
@@ -10,6 +11,9 @@ import 'package:latte/view/player_view/bloc/music_player_bloc.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
+  static String get route {
+    return "/";
+  }
 
   @override
   State<HomeView> createState() => _HomeViewState();
@@ -48,6 +52,7 @@ class _HomeViewState extends State<HomeView> {
                     ],
                   ),
                   body: PageView(
+                    physics: const NeverScrollableScrollPhysics(),
                     controller: pageController,
                     children: const [
                       DashboardView(),

@@ -384,6 +384,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.2"
+  go_router:
+    dependency: "direct main"
+    description:
+      name: go_router
+      sha256: cdae1b9c8bd7efadcef6112e81c903662ef2ce105cbd220a04bbb7c3425b5554
+      url: "https://pub.dev"
+    source: hosted
+    version: "14.2.0"
   graphs:
     dependency: transitive
     description:
@@ -417,7 +425,7 @@ packages:
     source: hosted
     version: "2.0.1"
   html:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: html
       sha256: "3a7812d5bcd2894edf53dfaf8cd640876cf6cef50a8f238745c8b8120ea74d3a"
@@ -576,6 +584,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.8.0"
+  melon:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: main
+      resolved-ref: "8091006c94e8273b83995e0dac8e3b62dce5f5a4"
+      url: "https://github.com/dev-hann/melon.git"
+    source: git
+    version: "1.0.0"
   meta:
     dependency: transitive
     description:
@@ -974,5 +991,5 @@ packages:
     source: hosted
     version: "2.2.0"
 sdks:
-  dart: ">=3.3.0 <4.0.0"
+  dart: ">=3.4.3 <4.0.0"
   flutter: ">=3.18.0-18.0.pre.54"

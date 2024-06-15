@@ -8,6 +8,9 @@ import 'package:latte/widget/slide_text.dart';
 
 class PlayListView extends StatelessWidget {
   const PlayListView({super.key});
+  static String get route {
+    return "/play_list_view";
+  }
 
   @override
   Widget build(BuildContext context) {
