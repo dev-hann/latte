@@ -4,6 +4,9 @@ class SongListView extends StatelessWidget {
   const SongListView({
     super.key,
   });
+  static String get route {
+    return "/song_list_view";
+  }
 
   AppBar appBar() {
     return AppBar();
@@ -11,6 +14,11 @@ class SongListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+      appBar: appBar(),
+      body: const Center(
+        child: Text("!!!"),
+      ),
+    );
   }
 }

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:latte/enum/page_type.dart';
+import 'package:latte/router/latte_router.dart';
 import 'package:latte/view/dashboard_view/bloc/dashboard_bloc.dart';
-import 'package:latte/view/home_view/bloc/home_bloc.dart';
 import 'package:latte/view/search_view/bloc/search_bloc.dart';
+import 'package:latte/view/search_view/search_view.dart';
+import 'package:latte/view/song_list_view/song_list_view.dart';
 import 'package:latte/widget/dashboard_carosel.dart';
 import 'package:latte/widget/dasoboard_song_card.dart';
 import 'package:melon/melon.dart';
@@ -21,15 +22,20 @@ class DashboardView extends StatelessWidget {
     return Builder(
       builder: (context) {
         final searchBloc = BlocProvider.of<SearchBloc>(context);
-        final homeBloc = BlocProvider.of<HomeBloc>(context);
         return GestureDetector(
           onTap: () {
             searchBloc.state.queryController.text = song.query;
             searchBloc.add(
               SearchQueried(),
             );
-            homeBloc.add(
-              const HomePageTypeUpdated(PageType.search),
+            Navigator.of(LatteRouter.homeKey.currentContext!).push(
+              MaterialPageRoute(
+                builder: (settings) {
+                  return const SearchView(
+                    isAutoFocus: false,
+                  );
+                },
+              ),
             );
           },
           child: DasoboardSongCard(
@@ -85,9 +91,20 @@ class DashboardView extends StatelessWidget {
               title: 'DJ',
               songList: dashboard.djList,
               itemBuilder: (context, item) {
-                return DasoboardSongCard(
-                  imageURL: item.imageURL,
-                  title: item.title,
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.of(LatteRouter.dashbaordKey.currentContext!).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return const SongListView();
+                        },
+                      ),
+                    );
+                  },
+                  child: DasoboardSongCard(
+                    imageURL: item.imageURL,
+                    title: item.title,
+                  ),
                 );
               },
             ),

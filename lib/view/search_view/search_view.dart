@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:latte/enum/page_type.dart';
 import 'package:latte/enum/search_suggestion_type.dart';
 import 'package:latte/model/search_suggestion.dart';
 import 'package:latte/model/song.dart';
-import 'package:latte/view/home_view/bloc/home_bloc.dart';
 import 'package:latte/view/play_list_view/bloc/play_list_bloc.dart';
 import 'package:latte/view/search_view/bloc/search_bloc.dart';
 import 'package:latte/view/player_view/bloc/music_player_bloc.dart';
 import 'package:latte/widget/slide_text.dart';
 
 class SearchView extends StatefulWidget {
-  const SearchView({super.key});
+  const SearchView({
+    super.key,
+    this.isAutoFocus = true,
+  });
+  final bool isAutoFocus;
   static String get route {
     return "/search";
   }
@@ -22,6 +24,7 @@ class SearchView extends StatefulWidget {
 
 class _SearchViewState extends State<SearchView> {
   Widget searchTextField({
+    required bool isAutoFocus,
     required TextEditingController controller,
     required VoidCallback onTap,
     required Function(String value) onchanged,
@@ -29,7 +32,7 @@ class _SearchViewState extends State<SearchView> {
     required VoidCallback onClearTap,
   }) {
     return TextField(
-      autofocus: true,
+      autofocus: isAutoFocus,
       onTap: onTap,
       controller: controller,
       textInputAction: TextInputAction.search,
@@ -111,14 +114,12 @@ class _SearchViewState extends State<SearchView> {
             appBar: AppBar(
               leading: IconButton(
                 onPressed: () {
-                  final bloc = BlocProvider.of<HomeBloc>(context);
-                  bloc.add(
-                    const HomePageTypeUpdated(PageType.playList),
-                  );
+                  Navigator.pop(context);
                 },
                 icon: const Icon(Icons.arrow_back_ios),
               ),
               title: searchTextField(
+                isAutoFocus: widget.isAutoFocus,
                 controller: state.queryController,
                 onTap: () {
                   searchBloc.add(SearchTextFieldFocused());
@@ -182,6 +183,7 @@ class _SearchViewState extends State<SearchView> {
                       return searchResultView(
                         resultList: resultList,
                         onSongTap: (song) {
+                          primaryFocus?.unfocus();
                           listBloc.add(
                             PlayListSongAdded(song),
                           );
