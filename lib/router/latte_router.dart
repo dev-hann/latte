@@ -22,6 +22,7 @@ import 'package:latte/view/search_view/bloc/search_bloc.dart';
 class LatteRouter {
   static final homeKey = GlobalKey<NavigatorState>();
   static final dashbaordKey = GlobalKey<NavigatorState>();
+  static final playListKey = GlobalKey<NavigatorState>();
   static final _router = GoRouter(
     navigatorKey: homeKey,
     initialLocation: HomeView.route,

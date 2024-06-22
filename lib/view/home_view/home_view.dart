@@ -82,6 +82,12 @@ class _HomeViewState extends State<HomeView> {
             bottom: BottomNavigationBar(
               currentIndex: state.bottomIndex,
               onTap: (index) {
+                Navigator.popUntil(
+                  LatteRouter.homeKey.currentContext!,
+                  (route) {
+                    return route.isFirst;
+                  },
+                );
                 final bloc = BlocProvider.of<HomeBloc>(context);
                 bloc.add(HomeBottomIndexUpdated(index));
                 BlocProvider.of<MusicPlayerBloc>(context)
