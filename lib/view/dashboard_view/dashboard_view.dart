@@ -67,7 +67,26 @@ class DashboardView extends StatelessWidget {
           children: [
             DashboardCarosel<MelonSong>(
               title: 'TOP100',
-              action: const Text("전체보기"),
+              action: GestureDetector(
+                onTap: () {
+                  Navigator.of(LatteRouter.homeKey.currentContext!).push(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return SongListView<MelonSong>(
+                          title: 'TOP100',
+                          songList: () async {
+                            return dashboard.top100List;
+                          },
+                          itemBuilder: (item) {
+                            return Text(item.toString());
+                          },
+                        );
+                      },
+                    ),
+                  );
+                },
+                child: const Text("전체보기"),
+              ),
               songList: dashboard.top100List,
               itemBuilder: (context, song) {
                 return songCard(song);
@@ -87,16 +106,24 @@ class DashboardView extends StatelessWidget {
                 return songCard(song);
               },
             ),
-            DashboardCarosel(
+            DashboardCarosel<MelonDj>(
               title: 'DJ',
               songList: dashboard.djList,
               itemBuilder: (context, item) {
                 return GestureDetector(
                   onTap: () {
-                    Navigator.of(LatteRouter.dashbaordKey.currentContext!).push(
+                    Navigator.of(LatteRouter.homeKey.currentContext!).push(
                       MaterialPageRoute(
                         builder: (context) {
-                          return const SongListView();
+                          return SongListView<MelonDj>(
+                            title: item.title,
+                            songList: () async {
+                              return <MelonDj>[];
+                            },
+                            itemBuilder: (item) {
+                              return Text(item.toString());
+                            },
+                          );
                         },
                       ),
                     );
