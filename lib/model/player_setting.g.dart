@@ -17,7 +17,7 @@ class PlayerSettingAdapter extends TypeAdapter<PlayerSetting> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return PlayerSetting(
-      loopMode: LoopMode.values[fields[0]],
+      loopMode: fields[0] as LatteLoopMode,
     );
   }
 
@@ -26,7 +26,7 @@ class PlayerSettingAdapter extends TypeAdapter<PlayerSetting> {
     writer
       ..writeByte(1)
       ..writeByte(0)
-      ..write(obj.loopMode.index);
+      ..write(obj.loopMode);
   }
 
   @override

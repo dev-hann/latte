@@ -1,5 +1,6 @@
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
+import 'package:latte/model/media_item.dart';
 import 'package:latte/model/player_setting.dart';
 import 'package:latte/model/song.dart';
 import 'package:latte/service/data_base.dart';
@@ -69,10 +70,12 @@ class AudioService {
     if (url != null) {
       final source = AudioSource.uri(
         Uri.parse(url),
-        tag: MediaItem(
+        tag: LatteMediaItem(
           id: song.youtubeID,
           title: song.title,
           artUri: Uri.parse(song.thumbnail),
+          author: song.author,
+          uploadDateTime: song.uploadDateTime,
           duration: song.duration,
         ),
       );
@@ -104,7 +107,7 @@ class AudioService {
   }
 
   Future updateSetting(PlayerSetting setting) async {
-    await audio.setLoopMode(setting.loopMode);
+    await audio.setLoopMode(LoopMode.values[setting.loopMode.index]);
     return settingBox.updateData(settingKey, setting);
   }
 

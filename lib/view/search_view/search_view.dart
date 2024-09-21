@@ -6,7 +6,7 @@ import 'package:latte/model/song.dart';
 import 'package:latte/view/play_list_view/bloc/play_list_bloc.dart';
 import 'package:latte/view/search_view/bloc/search_bloc.dart';
 import 'package:latte/view/player_view/bloc/music_player_bloc.dart';
-import 'package:latte/widget/slide_text.dart';
+import 'package:latte/widget/song_list_tile.dart';
 
 class SearchView extends StatefulWidget {
   const SearchView({
@@ -85,12 +85,11 @@ class _SearchViewState extends State<SearchView> {
       itemBuilder: (_, index) {
         final song = resultList[index];
         return Card(
-          child: ListTile(
+          child: SongListTile(
+            song: song,
             onTap: () {
               onSongTap(song);
             },
-            title: SlideText(song.title),
-            subtitle: Text(song.duration.toString()),
           ),
         );
       },
