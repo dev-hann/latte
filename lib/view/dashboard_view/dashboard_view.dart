@@ -51,9 +51,6 @@ class DashboardView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<DashboardBloc, DashboardState>(
       builder: (context, state) {
-        // final searchBloc = BlocProvider.of<SearchBloc>(context);
-        // final homeBloc = BlocProvider.of<HomeBloc>(context);
-
         final dashboard = state.dashboard;
         if (dashboard == null) {
           return const Center(
@@ -78,7 +75,15 @@ class DashboardView extends StatelessWidget {
                             return dashboard.top100List;
                           },
                           itemBuilder: (item) {
-                            return Text(item.toString());
+                            return GestureDetector(
+                              onTap: () {},
+                              child: Card(
+                                child: ListTile(
+                                  title: Text(item.song),
+                                  subtitle: Text(item.singer),
+                                ),
+                              ),
+                            );
                           },
                         );
                       },

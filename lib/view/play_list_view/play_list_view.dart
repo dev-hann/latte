@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:latte/util/time_format.dart';
 import 'package:latte/view/play_list_view/bloc/play_list_bloc.dart';
 import 'package:latte/view/player_view/bloc/music_player_bloc.dart';
-import 'package:latte/widget/slide_text.dart';
+import 'package:latte/widget/song_list_tile.dart';
 
 class PlayListView extends StatelessWidget {
   const PlayListView({super.key});
@@ -72,20 +71,14 @@ class PlayListView extends StatelessWidget {
                           BlocProvider.of<MusicPlayerBloc>(context);
                       final currentSong = state.currentSong;
                       final isCurrent = currentSong == song;
-                      return ListTile(
-                        selected: isCurrent,
-                        onTap: () async {
+                      return SongListTile(
+                        song: song,
+                        isSelected: isCurrent,
+                        onTap: () {
                           songBloc.add(
                             MusicPlayerPlayed(song),
                           );
                         },
-                        title: SlideText(
-                          song.title,
-                          enable: isCurrent,
-                        ),
-                        subtitle: Text(
-                          TimeFormat.songDuration(song.duration),
-                        ),
                       );
                     },
                   ),

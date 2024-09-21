@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:just_audio_background/just_audio_background.dart';
+import 'package:latte/model/media_item.dart';
 import 'package:latte/model/play_list.dart';
 import 'package:latte/model/player_setting.dart';
 import 'package:latte/model/song.dart';

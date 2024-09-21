@@ -18,7 +18,7 @@ class SearchSuggesntionAdapter extends TypeAdapter<SearchSuggesntion> {
     };
     return SearchSuggesntion(
       query: fields[0] as String,
-      type: SearchSuggestionType.values[fields[1]],
+      type: fields[1] as SearchSuggestionType,
     );
   }
 
@@ -29,7 +29,7 @@ class SearchSuggesntionAdapter extends TypeAdapter<SearchSuggesntion> {
       ..writeByte(0)
       ..write(obj.query)
       ..writeByte(1)
-      ..write(obj.type.index);
+      ..write(obj.type);
   }
 
   @override

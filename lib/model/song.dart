@@ -10,6 +10,8 @@ class Song extends Equatable {
     required this.title,
     required this.youtubeID,
     required this.duration,
+    required this.author,
+    required this.uploadDateTime,
   });
 
   @HiveField(0)
@@ -18,6 +20,10 @@ class Song extends Equatable {
   final String youtubeID;
   @HiveField(2)
   final Duration duration;
+  @HiveField(3)
+  final String author;
+  @HiveField(4)
+  final DateTime? uploadDateTime;
 
   Future<String?> get audioURL async {
     final manifest =
@@ -38,12 +44,16 @@ class Song extends Equatable {
         title,
         youtubeID,
         duration,
+        author,
+        uploadDateTime,
       ];
   Map<String, dynamic> toMap() {
     return {
       "title": title,
       "youtubeID": youtubeID,
       "duration": duration.inMilliseconds,
+      "author": author,
+      "uploadDateTime": uploadDateTime?.millisecondsSinceEpoch,
     };
   }
 
@@ -53,6 +63,10 @@ class Song extends Equatable {
       title: map["title"],
       youtubeID: map["youtubeID"],
       duration: Duration(milliseconds: map["duration"]),
+      author: map["author"],
+      uploadDateTime: map["uploadDatetime"] == null
+          ? null
+          : DateTime.fromMillisecondsSinceEpoch(map["uploadDatetime"]),
     );
   }
 }

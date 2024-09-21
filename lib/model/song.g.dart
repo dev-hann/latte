@@ -20,19 +20,25 @@ class SongAdapter extends TypeAdapter<Song> {
       title: fields[0] as String,
       youtubeID: fields[1] as String,
       duration: fields[2] as Duration,
+      author: fields[3] as String,
+      uploadDateTime: fields[4] as DateTime?,
     );
   }
 
   @override
   void write(BinaryWriter writer, Song obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.title)
       ..writeByte(1)
       ..write(obj.youtubeID)
       ..writeByte(2)
-      ..write(obj.duration);
+      ..write(obj.duration)
+      ..writeByte(3)
+      ..write(obj.author)
+      ..writeByte(4)
+      ..write(obj.uploadDateTime);
   }
 
   @override

@@ -76,6 +76,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         title: item.title,
         youtubeID: item.id.value,
         duration: item.duration ?? Duration.zero,
+        author: item.author,
+        uploadDateTime: item.uploadDate,
       );
     }).toList();
     emit(

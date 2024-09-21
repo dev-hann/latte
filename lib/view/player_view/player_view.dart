@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:just_audio/just_audio.dart';
+import 'package:latte/enum/loop_mode.dart';
 import 'package:latte/view/player_view/bloc/music_player_bloc.dart';
 import 'package:latte/widget/music_progress_widget.dart';
 import 'package:latte/widget/play_button.dart';
@@ -59,8 +59,8 @@ class PlayerView extends StatelessWidget {
   }
 
   Widget controlButtonsWidget({
-    required LoopMode loopMode,
-    required Function(LoopMode value) onLoopModeChaned,
+    required LatteLoopMode loopMode,
+    required Function(LatteLoopMode value) onLoopModeChaned,
     required VoidCallback onFastForwardTap,
     required VoidCallback onFastRewindTap,
   }) {
@@ -105,21 +105,21 @@ class PlayerView extends StatelessWidget {
   }
 
   Widget loopModeWidget({
-    required LoopMode loopMode,
-    required Function(LoopMode value) onLoopModeChaned,
+    required LatteLoopMode loopMode,
+    required Function(LatteLoopMode value) onLoopModeChaned,
   }) {
     return controlButtonWidget(
       onTap: () {
-        LoopMode nextMode;
+        LatteLoopMode nextMode;
         switch (loopMode) {
-          case LoopMode.off:
-            nextMode = LoopMode.all;
+          case LatteLoopMode.off:
+            nextMode = LatteLoopMode.all;
             break;
-          case LoopMode.one:
-            nextMode = LoopMode.off;
+          case LatteLoopMode.one:
+            nextMode = LatteLoopMode.off;
             break;
-          case LoopMode.all:
-            nextMode = LoopMode.one;
+          case LatteLoopMode.all:
+            nextMode = LatteLoopMode.one;
             break;
         }
         onLoopModeChaned(nextMode);
@@ -127,15 +127,15 @@ class PlayerView extends StatelessWidget {
       child: Builder(
         builder: (context) {
           switch (loopMode) {
-            case LoopMode.off:
+            case LatteLoopMode.off:
               return const Icon(
                 Icons.repeat,
               );
-            case LoopMode.one:
+            case LatteLoopMode.one:
               return const Icon(
                 Icons.repeat_one,
               );
-            case LoopMode.all:
+            case LatteLoopMode.all:
               return const Icon(
                 Icons.repeat_on,
               );

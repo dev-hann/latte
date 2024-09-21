@@ -1,4 +1,6 @@
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:latte/enum/loop_mode.dart';
+import 'package:latte/enum/search_suggestion_type.dart';
 import 'package:latte/model/duration.g.dart';
 import 'package:latte/model/play_list.dart';
 import 'package:latte/model/player_setting.dart';
@@ -37,5 +39,7 @@ class DataBase<T> {
     Hive.registerAdapter(DurationAdapter());
     Hive.registerAdapter(PlayerSettingAdapter());
     Hive.registerAdapter(SearchSuggesntionAdapter());
+    Hive.registerAdapter(LatteLoopModeAdapter());
+    Hive.registerAdapter(SearchSuggestionTypeAdapter());
   }
 }

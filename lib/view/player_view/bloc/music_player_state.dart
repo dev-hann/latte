@@ -23,11 +23,13 @@ class MusicPlayerState extends Equatable {
       return [];
     }
     return sequenceState!.sequence.map((e) {
-      final tag = e.tag as MediaItem;
+      final tag = e.tag as LatteMediaItem;
       return Song(
         title: tag.title,
         youtubeID: tag.id,
         duration: tag.duration!,
+        author: tag.author,
+        uploadDateTime: tag.uploadDateTime,
       );
     }).toList();
   }
@@ -37,11 +39,13 @@ class MusicPlayerState extends Equatable {
     if (currentSequence == null) {
       return null;
     }
-    final tag = currentSequence.tag as MediaItem;
+    final tag = currentSequence.tag as LatteMediaItem;
     return Song(
       title: tag.title,
       youtubeID: tag.id,
       duration: tag.duration!,
+      author: tag.author,
+      uploadDateTime: tag.uploadDateTime,
     );
   }
 
