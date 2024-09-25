@@ -68,6 +68,7 @@ class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
       MusicPlayerPlayed event, Emitter<MusicPlayerState> emit) async {
     final song = event.song;
     if (state.currentSong == song) {
+       await service.play();
       return;
     }
     final panelController = state.panelController;
