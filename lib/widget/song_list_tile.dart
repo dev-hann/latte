@@ -7,9 +7,11 @@ class SongListTile extends StatelessWidget {
   const SongListTile({
     super.key,
     required this.song,
+    this.enable = false,
     this.isSelected = false,
     this.onTap,
   });
+  final bool enable;
   final Song song;
   final bool isSelected;
   final VoidCallback? onTap;
@@ -62,8 +64,18 @@ class SongListTile extends StatelessWidget {
         imageURL: song.thumbnail,
         duration: song.duration,
       ),
-      title: SlideText(song.title),
-      subtitle: Text("Updated: ${song.uploadDateTime}"),
+      title: Builder(
+        builder: (_) {
+          if (enable) {
+            return SlideText(song.title);
+          }
+          return Text(
+            song.title,
+            maxLines: 1,
+          );
+        },
+      ),
+      subtitle: Text("Updated: ${TimeFormat.date(song.uploadDateTime)}"),
     );
   }
 }
